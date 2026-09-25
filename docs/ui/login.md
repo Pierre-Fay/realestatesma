@@ -14,7 +14,7 @@ Let a User (agent or admin role) sign in with email + password and reach their d
 ## Layout
 - Centered single card on a full-height page.
 - Brand above the card: text logo `Real Estate SMA`.
-- Card: title "Sign in", short description, then the form.
+- Card: title "Sign in", then the form.
 
 ## Form
 | Field | Type | Notes |
@@ -42,6 +42,7 @@ Let a User (agent or admin role) sign in with email + password and reach their d
 ## Accessibility
 - Labels tied to inputs via `for`/`id`.
 - Error text announced (`role="alert"` via BlatUI field-error).
+- override browser error messages/boxes
 
 ## Out of scope
 - Registration, email verification, role-specific dashboards (AUTH-03), disabled-account blocking (AUTH-04).
