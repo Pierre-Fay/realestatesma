@@ -1,38 +1,33 @@
-<laravel-boost-guidelines>
-=== foundation rules ===
+# Real Estate Platform — project instructions (CDA / REAC TP-01281)
 
-# Laravel Boost Guidelines
+> Project-specific rules. These live **above** the Boost guidelines block at the very end of this
+> file, so that Laravel Boost's `boost:update` (run on every `composer update`) never overwrites
+> them — Boost only replaces the content inside its own guidelines block (its tags are the last
+> two lines of this file).
 
-The Laravel Boost guidelines are specifically curated by Laravel maintainers for this application. These guidelines should be followed closely to ensure the best experience when building Laravel applications.
-
-## Project — Real Estate Platform (CDA / REAC TP-01281)
-
+## Project
 French CDA certification project. Deliverables must be defensible in front of a jury.
-Domain : Luxury real estate property and agent management
+Domain: luxury real estate property and agent management (San Miguel de Allende, Mexico).
 
-## Context Files - read on demand
-
-Inside docs/ you can find context files, they are indexed and described in docs/README.md
+## Context Files — read on demand
+Inside `docs/` you can find context files, indexed and described in `docs/README.md`.
 
 ## Non-negotiables
-
-- Never encode a business rule in code without adding it to 'docs/data/business-rules.md'
-- Each time a user-facing page is added, a markdown file should be added to 'docs/ui'
+- Never encode a business rule in code without adding it to `docs/data/business-rules.md`.
+- Each time a user-facing page is added, a markdown file must be added to `docs/ui`.
 - Never modify `docs/data/realestatesma.ddl`. It is a jury artifact, not a working file.
 
 ## Database schema
+- `docs/data/realestatesma.ddl` is a **frozen conception artifact** from Oracle Data Modeler for the jury dossier. Never edit it.
+- Treat it as intent (entities, relations, cardinality), not as a Laravel spec. Implementation follows Laravel conventions even when they diverge from the DDL.
+- The live schema is `database/migrations/`. Inspect it with Boost's `database-schema` tool before writing a migration.
+- For any question about the DDL (tables, columns, types, cardinalities), refer to this section: the DDL is the source of intent, `database/migrations/` is the working implementation.
 
-- `docs/data/realestatesma.ddl` is a **frozen conception artifact** from Oracle Data Modeler
-  for the jury dossier. Never edit it.
-- Treat it as intent (entities, relations, cardinality), not as a Laravel spec. Implementation
-  follows Laravel conventions even when they diverge from the DDL.
-- The live schema is `database/migrations/`. Inspect it with Boost's `database-schema` tool
-  before writing a migration.
-- For any question about the DDL (tables, columns, types, cardinalities), refer to this
-  section: the DDL is the source of intent, `database/migrations/` is the working implementation.
+## Deployment
+- Deployment is **manual**, not Laravel Cloud. Follow the `TECH-02` ticket: deploy the app to a web server and document the steps so the process is reproducible for the jury.
+- The default Boost `deployments` guideline is excluded via `config/boost.php` (`boost.guidelines.exclude`).
 
 ## Git workflow
-
 - Never commit directly to `main`. Always branch first.
 - Before creating a branch, run `git checkout main && git pull origin main`.
 - Branch naming: `<type>/<ticket>-<slug>`, where `<type>` is one of `feat`, `fix`, `chore`, `docs`, `refactor`, `test`. Example: `feat/PROJ-101-user-login`.
@@ -41,7 +36,6 @@ Inside docs/ you can find context files, they are indexed and described in docs/
 - Only use a standalone `docs/` or `test/` branch for work with no owning feature ticket (e.g. backfilling tests for old code, fixing unrelated documentation).
 - Work with no owning user story (pure chore, tooling, config, standalone docs/refactor) is exempt from the ticket rule: name the branch `<type>/<slug>` and prefix commits with `<type>: <description>` (e.g. `chore/migrations-setup`, `chore: add migrations`); a ticket ID is required only when a planning ticket/user story exists.
 - Commit messages must follow: `<ticket>: <short description>`. Example: `PROJ-101: add login form validation`.
-- Work with no owning user story (pure chore, tooling, config, standalone docs/refactor) is exempt from the ticket rule: name the branch <type>/<slug> and prefix commits with <type>: <description> (e.g. chore/migrations-setup, chore: add migrations); a ticket ID is required only when a planning ticket/user story exists.
 - Within a feature branch, scope commits by change type while keeping the same ticket number, e.g.:
     - `PROJ-101: add login form and validation`
     - `PROJ-101: add tests for login flow`
@@ -58,6 +52,15 @@ Inside docs/ you can find context files, they are indexed and described in docs/
     - Remote: `git push origin --delete <branch>`
 - Start the next ticket only from a freshly pulled `main`.
 
+===
+
+<laravel-boost-guidelines>
+=== foundation rules ===
+
+# Laravel Boost Guidelines
+
+The Laravel Boost guidelines are specifically curated by Laravel maintainers for this application. These guidelines should be followed closely to ensure the best experience when building Laravel applications.
+
 ## Foundational Context
 
 This application is a Laravel application running on PHP 8.4. You are an expert with the Laravel ecosystem. Always use the APIs that match the installed major version of each package — do not assume a version.
@@ -68,9 +71,7 @@ Before relying on a package's API, confirm its installed version:
 
 ## Skills Activation
 
-This project has domain-specific skills in `.agents/skills/`. They are registered with opencode via
-the `skills.paths` entry in `opencode.json`. You MUST activate the relevant skill whenever you work in
-that domain—don't wait until you're stuck.
+This project has domain-specific skills available in `**/skills/**`. You MUST activate the relevant skill whenever you work in that domain—don't wait until you're stuck.
 
 ## Conventions
 
@@ -152,13 +153,6 @@ that domain—don't wait until you're stuck.
 - Follow existing application Enum naming conventions.
 - Prefer PHPDoc blocks over inline comments. Only add inline comments for exceptionally complex logic.
 - Use array shape type definitions in PHPDoc blocks.
-
-=== deployments rules ===
-
-# Deployment
-
-- Deployment is **manual**, not Laravel Cloud. Follow the `TECH-02` ticket: deploy the app to a
-  web server and document the deployment steps so the process is reproducible for the jury.
 
 === tests rules ===
 
