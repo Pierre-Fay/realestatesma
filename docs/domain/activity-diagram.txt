@@ -1,0 +1,41 @@
+@startuml
+
+|System|
+start
+:Visitor submits property inquiry or contact form;
+:Lead created (status = new);
+
+|Admin|
+:Assign lead to an agent;
+
+|Agent|
+repeat
+  :Review and attempt to contact the lead;
+  if (Contact successful?) then (yes)
+    :Set status = contacted;
+    if (Fits criteria: budget and interest align?) then (yes)
+      :Set status = qualified;
+      if (Deal closes?) then (yes)
+        :Set status = closed;
+      else (no)
+        :Set status = lost;
+      endif
+    else (no)
+      :Set status = lost;
+    endif
+    break
+  else (no)
+    if (Reassign to another agent?) then (yes)
+      |Admin|
+      :Reassign lead to a different agent;
+      |Agent|
+    else (no)
+      :Set status = lost;
+      break
+    endif
+  endif
+repeat while (Lead still open?) is (yes) not (no)
+
+stop
+
+@enduml
