@@ -5,6 +5,59 @@
 
 The Laravel Boost guidelines are specifically curated by Laravel maintainers for this application. These guidelines should be followed closely to ensure the best experience when building Laravel applications.
 
+## Project — Real Estate Platform (CDA / REAC TP-01281)
+
+French CDA certification project. Deliverables must be defensible in front of a jury.
+Domain : Luxury real estate property and agent management
+
+## Context Files - read on demand
+
+Inside docs/ you can find context files, they are indexed and described in docs/README.md
+
+## Non-negotiables
+
+- Never encode a business rule in code without adding it to 'docs/data/business-rules.md'
+- Each time a user-facing page is added, a markdown file should be added to 'docs/ui'
+- Never modify `docs/data/realestatesma.ddl`. It is a jury artifact, not a working file.
+
+## Database schema
+
+- `docs/data/realestatesma.ddl` is a **frozen conception artifact** from Oracle Data Modeler
+  for the jury dossier. Never edit it.
+- Treat it as intent (entities, relations, cardinality), not as a Laravel spec. Implementation
+  follows Laravel conventions even when they diverge from the DDL.
+- The live schema is `database/migrations/`. Inspect it with Boost's `database-schema` tool
+  before writing a migration.
+- For any question about the DDL (tables, columns, types, cardinalities), refer to this
+  section: the DDL is the source of intent, `database/migrations/` is the working implementation.
+
+## Git workflow
+
+- Never commit directly to `main`. Always branch first.
+- Before creating a branch, run `git checkout main && git pull origin main`.
+- Branch naming: `<type>/<ticket>-<slug>`, where `<type>` is one of `feat`, `fix`, `chore`, `docs`, `refactor`, `test`. Example: `feat/PROJ-101-user-login`.
+- Create the branch with `git checkout -b <type>/<ticket>-<slug>`.
+- A branch's `<type>` reflects the overall purpose of the ticket, not a restriction on every commit inside it. A `feat/` branch should contain all the implementation, test, and doc commits needed for that ticket — don't split a single feature's work across separate `test/` or `docs/` branches.
+- Only use a standalone `docs/` or `test/` branch for work with no owning feature ticket (e.g. backfilling tests for old code, fixing unrelated documentation).
+- Work with no owning user story (pure chore, tooling, config, standalone docs/refactor) is exempt from the ticket rule: name the branch `<type>/<slug>` and prefix commits with `<type>: <description>` (e.g. `chore/migrations-setup`, `chore: add migrations`); a ticket ID is required only when a planning ticket/user story exists.
+- Commit messages must follow: `<ticket>: <short description>`. Example: `PROJ-101: add login form validation`.
+- Work with no owning user story (pure chore, tooling, config, standalone docs/refactor) is exempt from the ticket rule: name the branch <type>/<slug> and prefix commits with <type>: <description> (e.g. chore/migrations-setup, chore: add migrations); a ticket ID is required only when a planning ticket/user story exists.
+- Within a feature branch, scope commits by change type while keeping the same ticket number, e.g.:
+    - `PROJ-101: add login form and validation`
+    - `PROJ-101: add tests for login flow`
+    - `PROJ-101: document login flow in README`
+- Do not add an artificial "final clean commit" at the end of a branch. The merge commit itself is the completion marker — full commit history is kept intentionally (see merge strategy below).
+- On the first push of a branch, use `git push -u origin <branch>`. Subsequent pushes: `git push`.
+- To integrate finished work, merge directly into `main`:
+    - `git checkout main`
+    - `git pull origin main`
+    - `git merge --no-ff <branch>`
+    - Never use `git rebase` or a fast-forward merge for this step — a merge commit must always be created.
+- After a successful merge, delete the branch:
+    - Local: `git branch -d <branch>`
+    - Remote: `git push origin --delete <branch>`
+- Start the next ticket only from a freshly pulled `main`.
+
 ## Foundational Context
 
 This application is a Laravel application running on PHP 8.4. You are an expert with the Laravel ecosystem. Always use the APIs that match the installed major version of each package — do not assume a version.
@@ -15,7 +68,9 @@ Before relying on a package's API, confirm its installed version:
 
 ## Skills Activation
 
-This project has domain-specific skills available in `**/skills/**`. You MUST activate the relevant skill whenever you work in that domain—don't wait until you're stuck.
+This project has domain-specific skills in `.agents/skills/`. They are registered with opencode via
+the `skills.paths` entry in `opencode.json`. You MUST activate the relevant skill whenever you work in
+that domain—don't wait until you're stuck.
 
 ## Conventions
 
@@ -94,7 +149,7 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 - Always use curly braces for control structures, even for single-line bodies.
 - Use PHP 8 constructor property promotion: `public function __construct(public GitHub $github) { }`. Do not leave empty zero-parameter `__construct()` methods unless the constructor is private.
 - Use explicit return type declarations and type hints for all method parameters: `function isAccessible(User $user, ?string $path = null): bool`
-- Use TitleCase for Enum keys: `FavoritePerson`, `BestLake`, `Monthly`.
+- Follow existing application Enum naming conventions.
 - Prefer PHPDoc blocks over inline comments. Only add inline comments for exceptionally complex logic.
 - Use array shape type definitions in PHPDoc blocks.
 
@@ -102,8 +157,18 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 
 # Deployment
 
-- Laravel can be deployed using [Laravel Cloud](https://cloud.laravel.com/), which is the fastest way to deploy and scale production Laravel applications.
-- Activate the `deploying-to-cloud` skill whenever deploying to Laravel Cloud, configuring Cloud environments or resources, using the Cloud CLI, or troubleshooting Cloud deployments.
+- Deployment is **manual**, not Laravel Cloud. Follow the `TECH-02` ticket: deploy the app to a
+  web server and document the deployment steps so the process is reproducible for the jury.
+
+=== tests rules ===
+
+# Test Enforcement
+
+- Add or update tests for behavior and logic changes when a test provides meaningful regression coverage.
+- Pure copy, styling, and layout-only changes do not require new or updated tests.
+- When test coverage applies, run the affected tests and ensure they pass.
+- Test the changed behavior and its important failure modes, but do not add tests beyond them.
+- Read the `testing-best-practices` skill before writing tests.
 
 === laravel/core rules ===
 

@@ -1,0 +1,219 @@
+@startuml
+
+enum UserRole {
+    agent
+    admin
+}
+
+enum CategoryGroupType {
+    property_area
+    property_feature
+    property_label
+    property_status
+    property_type
+}
+
+enum PropertyImageType {
+    featured_image
+    gallery
+}
+
+enum LeadStatus {
+    new
+    contacted
+    qualified
+    closed
+    lost
+}
+
+class User <<entity>> {
+    - id: Integer
+    + name: String
+    + email: String
+    - password: String
+    + role: UserRole
+    + photo: String
+    + is_enabled: Boolean
+    --
+    + isAdmin(): Boolean
+    + isAgent(): Boolean
+    + enable(): void
+    + disable(): void
+    --
+    + agent(): Agent
+}
+
+class Agent <<entity>> {
+    - id: Integer
+    + name: String
+    + slug: String
+    + photo: String
+    + email: String
+    + phone: String
+    + bio: Text
+    + bio_es: Text
+    + agent_order: Integer
+    + is_active: Boolean
+    + created_at: Timestamp
+    + updated_at: Timestamp
+    --
+    + listings(): List<Property>
+    + publish(): void
+    + unpublish(): void
+}
+
+class Category <<entity>> {
+    - id: Integer
+    + name: String
+    + slug: String
+    + category_order: Integer
+    + group_type: CategoryGroupType
+}
+
+class Lead <<entity>> {
+    - id: Integer
+    + first_name: String
+    + last_name: String
+    + email: String
+    + phone: String
+    + interested_in: String
+    + budget: Decimal
+    + status: LeadStatus
+    + notes: Text
+    + created_at: Timestamp
+    + updated_at: Timestamp
+    --
+    + contact(): void
+    + qualify(): void
+    + win(): void
+    + lose(): void
+    + reassignTo(agent: Agent): void
+}
+
+class OpenHouse <<entity>> {
+    - id: Integer
+    + starts_at: Datetime
+    + ends_at: Datetime
+    + notes: Text
+    + notes_es: Text
+    + is_published: Boolean
+    + created_at: Timestamp
+    + updated_at: Timestamp
+    --
+    + publish(): void
+    + cancel(): void
+    + isUpcoming(): Boolean
+}
+
+class Property <<entity>> {
+    - id: Integer
+    + name: String
+    + slug: String
+    + address: String
+    + city: String
+    + state: String
+    + country: String
+    + zip: String
+    + latitude: Decimal
+    + longitude: Decimal
+    + is_featured: Boolean
+    + is_active: Boolean
+    + is_sold: Boolean
+    + sold_date: Date
+    + price_usd: Decimal
+    + price_mxn: Decimal
+    + show_both_prices: Boolean
+    + description: Text
+    + description_es: Text
+    + lot_meters: Float
+    + construction_meters: Float
+    + bedrooms: Integer
+    + bathrooms: Integer
+    + half_bathrooms: Integer
+    + parking_spaces: Integer
+    + notes: Text
+    + property_order: Integer
+    + created_at: Timestamp
+    + updated_at: Timestamp
+    --
+    + approve(): void
+    + unpublish(): void
+    + markAsSold(soldDate: Date): void
+    + toggleFeatured(): void
+}
+
+class PropertyImage <<entity>> {
+    - id: Integer
+    + path: String
+    + type: PropertyImageType
+    + sort_order: Integer
+    --
+    + setAsFeatured(): void
+}
+
+class PropertyInquiry <<entity>> {
+    - id: Integer
+    + name: String
+    + email: String
+    + phone: String
+    + message: Text
+    + created_at: Timestamp
+}
+
+' -- Service layer --
+
+class AgentService <<service>> {
+    + createAgent(data: Map): User
+}
+
+class CategoryService <<service>> {
+    + createCategory(data: Map): Category
+    + reorderCategories(categories: List<Category>): void
+}
+
+' -- Authorization layer --
+
+class PropertyPolicy <<policy>> {
+    + approve(user: User, property: Property): Boolean
+    + unpublish(user: User, property: Property): Boolean
+    + markSold(user: User, property: Property): Boolean
+    + feature(user: User, property: Property): Boolean
+}
+
+class AgentPolicy <<policy>> {
+    + manageUser(user: User, target: User): Boolean
+}
+
+note bottom of CategoryService
+  CategoryService actions follow the
+  same policy-check pattern (omitted
+  here to keep the diagram readable).
+end note
+
+' -- Relationships --
+User "0..1" -- "0..1" Agent : linked profile >
+Agent "0..1" -- "0..*" Lead : assigned to >
+Agent "0..*" -- "0..*" Property : lists >
+Category "0..*" -- "0..*" Property : classifies >
+Property "1" *-- "0..*" OpenHouse : hosts
+Property "1" *-- "0..*" PropertyImage : has
+Property "1" *-- "0..*" PropertyInquiry : receives
+
+User ..> UserRole
+Category ..> CategoryGroupType
+PropertyImage ..> PropertyImageType
+Lead ..> LeadStatus
+
+note bottom of Category
+  Agent-Property is a many-to-many implemented via the
+  agent_property pivot table; Property-Category via the
+  category_property pivot table (Laravel alphabetical
+  naming; the DDL uses property_agent / property_category).
+end note
+
+AgentService ..> Agent : uses
+AgentService ..> User : uses
+AgentService ..> AgentPolicy : checks
+CategoryService ..> Category : uses
+
+@enduml

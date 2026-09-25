@@ -1,0 +1,47 @@
+@startuml
+
+actor Agent
+actor Admin
+participant "PropertyController" as Controller
+participant "PropertyPolicy" as Policy
+participant "PropertyService" as Service
+participant "Property" as Model
+database "Database" as DB
+
+== Agent attempts to approve a property ==
+
+note over Agent, Controller
+  The UI never exposes this action to a non-admin Agent.
+  This flow shows the request reaching the server directly
+  (e.g. a replayed/crafted request), demonstrating that
+  authorization is enforced server-side, not only hidden
+  in the interface.
+end note
+
+Agent -> Controller : approveProperty(propertyId)
+Controller -> Policy : approve(agent, property)
+Policy -> Policy : agent.isAdmin()
+Policy --> Controller : false
+
+alt Not authorized
+    Controller --> Agent : 403 Forbidden
+end
+
+== Admin approves the same property ==
+
+Admin -> Controller : approveProperty(propertyId)
+Controller -> Policy : approve(admin, property)
+Policy -> Policy : admin.isAdmin()
+Policy --> Controller : true
+
+alt Authorized
+    Controller -> Service : approve(property)
+    Service -> Model : is_active = true
+    Model -> DB : UPDATE property
+    DB --> Model : ok
+    Model --> Service : ok
+    Service --> Controller : ok
+    Controller --> Admin : 200 OK, property approved
+end
+
+@enduml
