@@ -8,6 +8,11 @@ test('login screen can be rendered', function () {
     $response->assertStatus(200);
 });
 
+test('public registration is disabled', function () {
+    $this->get('/register')->assertNotFound();
+    $this->post('/register', [])->assertNotFound();
+});
+
 test('users can authenticate using the login screen', function () {
     $user = User::factory()->create();
 
