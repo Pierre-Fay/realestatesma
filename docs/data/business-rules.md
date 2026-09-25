@@ -10,6 +10,10 @@ A User has exactly one role: `admin` or `agent`. Certain pages and actions are r
 (e.g. property approval, user management, category management). An `agent` can never perform an admin-only operation.
 Authorization is enforced server-side (policies), never only by hiding UI controls.
 
+### Account creation and self-registration
+Accounts are created by an Admin; public self-registration is disabled. The login page is exposed at `/login` only —
+there is no public sign-up and no login entry point advertised on public pages.
+
 ### Enable or disable a user's login independently of their public profile
 An Admin can enable or disable a User's login access without deleting or unpublishing their Agent profile. Safety rule:
 an Admin cannot disable their own account, nor disable the last remaining active Admin.
