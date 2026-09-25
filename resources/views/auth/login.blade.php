@@ -2,9 +2,6 @@
     <x-ui.card variant="sectioned">
         <x-ui.card-header>
             <x-ui.card-title class="text-lg">{{ __('Sign in') }}</x-ui.card-title>
-            <x-ui.card-description>
-                {{ __('Enter your credentials to access your dashboard.') }}
-            </x-ui.card-description>
         </x-ui.card-header>
 
         <x-ui.card-content>
@@ -15,7 +12,7 @@
                 </x-ui.alert>
             @endif
 
-            <form method="POST" action="{{ route('login') }}" class="flex flex-col gap-4">
+            <form method="POST" action="{{ route('login') }}" class="flex flex-col gap-4" novalidate>
                 @csrf
 
                 <x-ui.field>
