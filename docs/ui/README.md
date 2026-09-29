@@ -15,3 +15,4 @@ Accessibility, Wanted changes, Out of scope.
 | [`admin.md`](admin.md) | Administration | `/admin` |
 | [`admin-users.md`](admin-users.md) | User management | `/admin/users` |
 | [`admin-agents.md`](admin-agents.md) | Agent management | `/admin/agents` |
+| [`agent-listings.md`](agent-listings.md) | Agent listing management | `/listings` |

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 #[Fillable([
     'name',
@@ -107,5 +108,23 @@ class Property extends Model
     public function inquiries(): HasMany
     {
         return $this->hasMany(PropertyInquiry::class);
+    }
+
+    /**
+     * Build a unique slug from the given name, appending a numeric suffix on collision.
+     * Pass the property's own id when updating so it does not collide with itself.
+     */
+    public static function uniqueSlugFor(string $name, ?int $ignoreId = null): string
+    {
+        $base = Str::slug($name) ?: 'property';
+        $slug = $base;
+        $suffix = 2;
+
+        while (static::query()->where('slug', $slug)->when($ignoreId, fn ($query) => $query->whereKeyNot($ignoreId))->exists()) {
+            $slug = $base.'-'.$suffix;
+            $suffix++;
+        }
+
+        return $slug;
     }
 }
