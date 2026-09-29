@@ -11,6 +11,7 @@ inside this shell.
 ## Implementation
 - Layout: `x-app-layout` → `resources/views/layouts/app.blade.php`.
 - Built on BlatUI (shadcn-style) components; base template: BlatUI "Dashboard 02" (inset sidebar).
+- BlatUI foundations imported via `resources/css/blatui.css` (`@import` from `app.css`) — tokens, native-control utilities, base layer.
 - Key components: `x-ui.sidebar*`, `x-ui.dropdown-menu`, `x-ui.avatar`, `x-ui.separator`.
 - Replaced the default Breeze top navigation (`layouts/navigation.blade.php`, removed).
 
