@@ -15,5 +15,6 @@
                 "boost:mcp"
             ]
         }
-    }
+    },
+    "compaction": { "auto": true }
 }
