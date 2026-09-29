@@ -3,7 +3,8 @@
 > Draft to be refined together. Describes the desired UI and behaviour of the login page.
 
 ## Purpose
-Let a User (agent or admin role) sign in with email + password and reach their dashboard.
+Let a User (agent or admin role) sign in with email + password and reach the back office
+(see [`back-office.md`](back-office.md)).
 
 ## Access rules
 - **Guest only**: authenticated users who visit `/login` are redirected to `/dashboard`.
@@ -44,5 +45,9 @@ Let a User (agent or admin role) sign in with email + password and reach their d
 - Error text announced (`role="alert"` via BlatUI field-error).
 - override browser error messages/boxes
 
+## Wanted changes
+> Describe the desired UI changes here.
+-
+
 ## Out of scope
-- Registration, email verification, role-specific dashboards (AUTH-03), disabled-account blocking (AUTH-04).
+- Registration, email verification, role-aware navigation (AUTH-03), disabled-account blocking (AUTH-04).

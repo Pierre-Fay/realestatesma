@@ -1,23 +1,23 @@
 # Dashboard — `/dashboard`
 
+> Draft to be refined together. Describes the desired UI and behaviour of the dashboard page.
+
 ## Purpose
-Authenticated landing page for Users (agent or admin role).
+Home page of the back office (see [`back-office.md`](back-office.md)): the authenticated landing
+page for Users (agent or admin role).
 
 ## Access rules
 - Auth required; guests are redirected to `/login`.
-
-## Layout
-- Left sidebar (BlatUI, `variant="inset"`):
-  - Brand: "Real Estate SMA" with a building icon.
-  - Navigation: Dashboard (active state per route), Administration (admin only).
-  - Footer: current user (initials avatar, name, email) with a dropdown → Profile / Log out.
-- Header bar: sidebar toggle, vertical separator, page title.
-- Main content: role-aware welcome card.
+- Rendered inside the back office shell (sidebar + header).
 
 ## Content (role-aware)
 - "Welcome, :name" heading with the signed-in user's name.
 - Role indicator: "You are signed in as an Administrator." or "… as an Agent."
 - Admin only: an "Open administration" button linking to `/admin`.
+
+## Wanted changes
+> Describe the desired UI changes here.
+-
 
 ## Out of scope
 - Role-specific feature panels (Leads, Properties) — added by later tickets.

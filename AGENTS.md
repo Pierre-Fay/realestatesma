@@ -14,7 +14,7 @@ Inside `docs/` you can find context files, indexed and described in `docs/README
 
 ## Non-negotiables
 - Never encode a business rule in code without adding it to `docs/data/business-rules.md`.
-- Each time a user-facing page is added, a markdown file must be added to `docs/ui`.
+- Each time a user-facing page is added, a markdown file must be added to `docs/ui` (index: `docs/ui/README.md`). Shell/area changes to the shared authenticated back office go in `docs/ui/back-office.md`.
 - Never modify `docs/data/realestatesma.ddl`. It is a jury artifact, not a working file.
 
 ## Database schema

@@ -1,15 +1,21 @@
 # Administration — `/admin`
 
-> Draft to refine together.
+> Draft to be refined together. Describes the desired UI and behaviour of the administration page.
 
 ## Purpose
-Admin-only area (placeholder home for administration tools).
+Admin-only landing page for administration tools, rendered inside the back office shell
+(see [`back-office.md`](back-office.md)).
 
 ## Access rules
 - Auth + admin role required; agents get `403`.
 
 ## Content
-- Title and description. User management (AUTH-04) will be added here.
+- Title and description.
+- Entry point to user management (AUTH-04, `/admin/users`).
+
+## Wanted changes
+> Describe the desired UI changes here.
+-
 
 ## Out of scope
-- User enable/disable, agent account creation, category management — later admin tickets.
+- User enable/disable (AUTH-04), agent account creation, category management — later admin tickets.
