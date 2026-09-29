@@ -56,4 +56,24 @@ class UserFactory extends Factory
             'role' => UserRole::ADMIN,
         ]);
     }
+
+    /**
+     * Indicate that the user has the agent role.
+     */
+    public function agent(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::AGENT,
+        ]);
+    }
+
+    /**
+     * Indicate that the user's login access is disabled.
+     */
+    public function disabled(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_enabled' => false,
+        ]);
+    }
 }
