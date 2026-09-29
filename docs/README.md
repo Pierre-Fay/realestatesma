@@ -18,4 +18,5 @@ Inside domain can be found 3 files :
 Inside functional is a complete functional analysis file, with planning for agile tickets, with user stories, MoSCoW, and git branch naming
 
 ### Ui
-Inside ui you can find textual descriptions of individual page's wireframes (to be implemented)
+Inside ui can be found textual descriptions of the **back office** (the shared authenticated shell)
+and of each individual page's wireframe (to be implemented). See `docs/ui/README.md` for the index.
