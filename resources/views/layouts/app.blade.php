@@ -53,6 +53,12 @@
                                     <span>{{ __('Users') }}</span>
                                 </x-ui.sidebar-menu-button>
                             </x-ui.sidebar-menu-item>
+                            <x-ui.sidebar-menu-item>
+                                <x-ui.sidebar-menu-button href="{{ route('admin.agents.index') }}" :is-active="request()->routeIs('admin.agents.*')">
+                                    <x-lucide-user-round />
+                                    <span>{{ __('Agents') }}</span>
+                                </x-ui.sidebar-menu-button>
+                            </x-ui.sidebar-menu-item>
                         @endif
                     </x-ui.sidebar-menu>
                 </x-ui.sidebar-group>

@@ -45,8 +45,10 @@ their personal data is collected. The site must publish a legal notice and a pri
 
 ### Agent account creation
 Creating an Agent account atomically creates both the login (User with role `agent`) and the linked public Agent
-profile. An Admin may also create a public Agent profile with no linked login, so a departed agent's listing history
-stays attributed or someone can be listed publicly without system access.
+profile, in a single transaction. The login email is private (used to authenticate); the agent's public contact email
+is a separate value and is never the auth identifier. The created login is enabled and pre-verified, so the agent can
+sign in immediately. An Admin may also create a public Agent profile with no linked login, so a departed agent's
+listing history stays attributed or someone can be listed publicly without system access.
 
 ### Agent profile visibility
 An Admin controls whether an Agent's public profile is visible to visitors (`Agent.is_active`), independently of the

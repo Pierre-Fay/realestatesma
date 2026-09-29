@@ -14,3 +14,4 @@ Accessibility, Wanted changes, Out of scope.
 | [`dashboard.md`](dashboard.md) | Dashboard (back office home) | `/dashboard` |
 | [`admin.md`](admin.md) | Administration | `/admin` |
 | [`admin-users.md`](admin-users.md) | User management | `/admin/users` |
+| [`admin-agents.md`](admin-agents.md) | Agent management | `/admin/agents` |
