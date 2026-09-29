@@ -61,18 +61,11 @@
                     </x-ui.field>
 
                     <x-ui.field>
-                        <label class="flex items-center gap-2 text-sm font-medium select-none">
+                        <x-ui.label>
                             <input type="hidden" name="is_active" value="0" />
-                            <input
-                                id="is_active"
-                                name="is_active"
-                                type="checkbox"
-                                value="1"
-                                @checked(old('is_active', true))
-                                class="border-input accent-primary size-4 shrink-0 rounded-[4px] border shadow-xs"
-                            />
+                            <x-ui.checkbox :native="true" id="is_active" name="is_active" value="1" :checked="old('is_active', true)" />
                             {{ __('Public profile visible') }}
-                        </label>
+                        </x-ui.label>
                         <x-ui.field-description>{{ __('Inactive agents keep their listings but are hidden from the public directory.') }}</x-ui.field-description>
                     </x-ui.field>
 

@@ -72,38 +72,6 @@
             </x-ui.table-body>
         </x-ui.table>
 
-        @if ($agents->hasPages())
-            <x-ui.pagination>
-                <x-ui.pagination-content>
-                    <x-ui.pagination-item>
-                        @if ($agents->onFirstPage())
-                            <span class="inline-flex h-9 items-center justify-center rounded-md px-2.5 text-sm opacity-50">
-                                <x-lucide-chevron-left class="rtl:rotate-180" />
-                                <span class="hidden sm:block">{{ __('Previous') }}</span>
-                            </span>
-                        @else
-                            <x-ui.pagination-previous :href="$agents->previousPageUrl()" />
-                        @endif
-                    </x-ui.pagination-item>
-
-                    @foreach ($agents->getUrlRange(max(1, $agents->currentPage() - 2), min($agents->lastPage(), $agents->currentPage() + 2)) as $page => $url)
-                        <x-ui.pagination-item>
-                            <x-ui.pagination-link :href="$url" :is-active="$page === $agents->currentPage()">{{ $page }}</x-ui.pagination-link>
-                        </x-ui.pagination-item>
-                    @endforeach
-
-                    <x-ui.pagination-item>
-                        @if ($agents->hasMorePages())
-                            <x-ui.pagination-next :href="$agents->nextPageUrl()" />
-                        @else
-                            <span class="inline-flex h-9 items-center justify-center rounded-md px-2.5 text-sm opacity-50">
-                                <span class="hidden sm:block">{{ __('Next') }}</span>
-                                <x-lucide-chevron-right class="rtl:rotate-180" />
-                            </span>
-                        @endif
-                    </x-ui.pagination-item>
-                </x-ui.pagination-content>
-            </x-ui.pagination>
-        @endif
+        <x-paginator :paginator="$agents" />
     </div>
 </x-app-layout>
