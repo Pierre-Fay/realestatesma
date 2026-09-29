@@ -47,6 +47,12 @@
                                     <span>{{ __('Administration') }}</span>
                                 </x-ui.sidebar-menu-button>
                             </x-ui.sidebar-menu-item>
+                            <x-ui.sidebar-menu-item>
+                                <x-ui.sidebar-menu-button href="{{ route('admin.users.index') }}" :is-active="request()->routeIs('admin.users.*')">
+                                    <x-lucide-users />
+                                    <span>{{ __('Users') }}</span>
+                                </x-ui.sidebar-menu-button>
+                            </x-ui.sidebar-menu-item>
                         @endif
                     </x-ui.sidebar-menu>
                 </x-ui.sidebar-group>
@@ -55,7 +61,6 @@
             <x-ui.sidebar-footer>
                 @php
                     $user = Auth::user();
-                    $initials = collect(preg_split('/\s+/', trim($user->name)))->map(fn ($n) => mb_substr($n, 0, 1))->take(2)->join('');
                 @endphp
                 <x-ui.sidebar-menu>
                     <x-ui.sidebar-menu-item>
@@ -67,7 +72,7 @@
                                     ::data-state="open ? 'open' : 'closed'"
                                 >
                                     <x-ui.avatar class="h-8 w-8 rounded-lg">
-                                        <x-ui.avatar-fallback class="rounded-lg">{{ $initials }}</x-ui.avatar-fallback>
+                                        <x-ui.avatar-fallback class="rounded-lg">{{ $user->initials }}</x-ui.avatar-fallback>
                                     </x-ui.avatar>
                                     <div class="grid flex-1 text-left text-sm leading-tight">
                                         <span class="truncate font-medium">{{ $user->name }}</span>

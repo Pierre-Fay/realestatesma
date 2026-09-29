@@ -13,4 +13,4 @@ Accessibility, Wanted changes, Out of scope.
 | [`login.md`](login.md) | Login page | `/login` |
 | [`dashboard.md`](dashboard.md) | Dashboard (back office home) | `/dashboard` |
 | [`admin.md`](admin.md) | Administration | `/admin` |
-| `admin-users.md` | User management *(AUTH-04, planned)* | `/admin/users` |
+| [`admin-users.md`](admin-users.md) | User management | `/admin/users` |
