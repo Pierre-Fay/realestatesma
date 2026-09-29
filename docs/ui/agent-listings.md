@@ -31,7 +31,8 @@ shell (see [`back-office.md`](back-office.md)).
 
 ## Rules
 - New listings are created **inactive** (`is_active = false`), pending admin approval (PROP-04).
-- Only `property_type`, `property_area`, `property_feature` categories are agent-editable; **`property_status` and `property_label` are admin-only**.
+- The category **vocabulary** is admin-managed (CAT-01); the agent only **assigns** from it.
+- Only `property_type`, `property_area`, `property_feature` categories are agent-assignable; **`property_status` and `property_label` are admin-only**.
 - One featured image per listing (enforced by the app); files live on the `public` disk (`storage:link` required).
 
 ## Wanted changes
