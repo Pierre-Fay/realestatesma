@@ -29,7 +29,7 @@ inside this shell.
 |---|---|---|
 | Dashboard | `/dashboard` | all users |
 | Administration | `/admin` | admin only |
-| Users | `/admin/users` | admin only (AUTH-04) |
+| Users | `/admin/users` | admin only |
 
 ### User menu (footer)
 - Avatar (initials), name, email.
@@ -42,7 +42,7 @@ inside this shell.
 ## Pages rendered in the shell
 - Dashboard (home) → [`dashboard.md`](dashboard.md)
 - Administration → [`admin.md`](admin.md)
-- User management → [`admin-users.md`](admin-users.md) *(AUTH-04, planned)*
+- User management → [`admin-users.md`](admin-users.md)
 - Profile → Breeze default (not yet documented)
 
 ## Wanted changes

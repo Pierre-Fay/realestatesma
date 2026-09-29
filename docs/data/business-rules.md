@@ -16,7 +16,8 @@ there is no public sign-up and no login entry point advertised on public pages.
 
 ### Enable or disable a user's login independently of their public profile
 An Admin can enable or disable a User's login access without deleting or unpublishing their Agent profile. Safety rule:
-an Admin cannot disable their own account, nor disable the last remaining active Admin.
+an Admin cannot disable their own account, nor disable the last remaining active Admin. Disabling a user immediately
+revokes their active sessions and remember-me token.
 
 ### Property approval workflow
 A property is only visible to the public after an Admin reviews and approves it. Until then it is inactive

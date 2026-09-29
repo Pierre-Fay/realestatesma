@@ -11,7 +11,7 @@ Admin-only landing page for administration tools, rendered inside the back offic
 
 ## Content
 - Title and description.
-- Entry point to user management (AUTH-04, `/admin/users`).
+- "Manage users" button linking to user management (`/admin/users`, AUTH-04).
 
 ## Wanted changes
 > Describe the desired UI changes here.
