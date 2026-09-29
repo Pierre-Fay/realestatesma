@@ -23,11 +23,12 @@ revokes their active sessions and remember-me token.
 A property is only visible to the public after an Admin reviews and approves it. Until then it is inactive
 (`is_active = false` by default). An Agent creates/edits a listing; an Admin approves it before it goes live.
 
-### Agent listing scope and categorization
-An Agent creates and edits only their **own** listings. The Agent assigns the structural, location and amenity
-categories (`property_type`, `property_area`, `property_feature`); the market status (`property_status`) and labels
-(`property_label`) are admin-curated. A listing may have a single featured image; conditionally-shown prices and
-location coordinates are optional.
+### Category vocabulary vs. assignment (design decision)
+The category **vocabulary** is admin-managed — an Admin creates, edits and reorders categories (CAT-01).
+**Assignment** is done by the listing's owner: an Agent may assign the structural, location and amenity
+categories (`property_type`, `property_area`, `property_feature`) to **their own** listings; the market status
+(`property_status`) and labels (`property_label`) remain admin-only. A listing may have a single featured image;
+conditionally-shown prices and location coordinates are optional.
 
 ### Property publishing, sold and featured status
 Public visibility is governed by `is_active`, independently of `is_sold` and `is_featured`. Only an Admin can change
@@ -62,7 +63,8 @@ agent's login access (`User.is_enabled`). Unpublishing a profile keeps the agent
 
 ### Categories
 Categories are managed by an Admin and drive search filters. A category belongs to one of five fixed group types:
-`property_area`, `property_feature`, `property_label`, `property_status`, `property_type`.
+`property_area`, `property_feature`, `property_label`, `property_status`, `property_type`. Until the admin category
+management page ships (CAT-01), the category values are seeded defaults (`CategorySeeder`) rather than admin-curated.
 
 ### Dual currency pricing
 A property has a price in USD and a price in MXN. An optional `show_both_prices` flag controls whether both prices are
