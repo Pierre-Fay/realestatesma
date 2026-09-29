@@ -40,6 +40,15 @@
                             </x-ui.sidebar-menu-button>
                         </x-ui.sidebar-menu-item>
 
+                        @if (Auth::user()->isAgent())
+                            <x-ui.sidebar-menu-item>
+                                <x-ui.sidebar-menu-button href="{{ route('listings.index') }}" :is-active="request()->routeIs('listings.*')">
+                                    <x-lucide-house />
+                                    <span>{{ __('My listings') }}</span>
+                                </x-ui.sidebar-menu-button>
+                            </x-ui.sidebar-menu-item>
+                        @endif
+
                         @if (Auth::user()->isAdmin())
                             <x-ui.sidebar-menu-item>
                                 <x-ui.sidebar-menu-button href="{{ route('admin') }}" :is-active="request()->routeIs('admin')">

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AgentController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Agent\PropertyController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,14 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/admin/agents', [AgentController::class, 'index'])->name('admin.agents.index');
     Route::get('/admin/agents/create', [AgentController::class, 'create'])->name('admin.agents.create');
     Route::post('/admin/agents', [AgentController::class, 'store'])->name('admin.agents.store');
+});
+
+Route::middleware(['auth', 'verified', 'agent'])->group(function () {
+    Route::get('/listings', [PropertyController::class, 'index'])->name('listings.index');
+    Route::get('/listings/create', [PropertyController::class, 'create'])->name('listings.create');
+    Route::post('/listings', [PropertyController::class, 'store'])->name('listings.store');
+    Route::get('/listings/{property}/edit', [PropertyController::class, 'edit'])->name('listings.edit');
+    Route::put('/listings/{property}', [PropertyController::class, 'update'])->name('listings.update');
 });
 
 Route::middleware('auth')->group(function () {
