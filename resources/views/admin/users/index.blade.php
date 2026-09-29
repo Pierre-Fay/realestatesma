@@ -113,38 +113,6 @@
             </x-ui.table-body>
         </x-ui.table>
 
-        @if ($users->hasPages())
-            <x-ui.pagination>
-                <x-ui.pagination-content>
-                    <x-ui.pagination-item>
-                        @if ($users->onFirstPage())
-                            <span class="inline-flex h-9 items-center justify-center rounded-md px-2.5 text-sm opacity-50">
-                                <x-lucide-chevron-left class="rtl:rotate-180" />
-                                <span class="hidden sm:block">{{ __('Previous') }}</span>
-                            </span>
-                        @else
-                            <x-ui.pagination-previous :href="$users->previousPageUrl()" />
-                        @endif
-                    </x-ui.pagination-item>
-
-                    @foreach ($users->getUrlRange(max(1, $users->currentPage() - 2), min($users->lastPage(), $users->currentPage() + 2)) as $page => $url)
-                        <x-ui.pagination-item>
-                            <x-ui.pagination-link :href="$url" :is-active="$page === $users->currentPage()">{{ $page }}</x-ui.pagination-link>
-                        </x-ui.pagination-item>
-                    @endforeach
-
-                    <x-ui.pagination-item>
-                        @if ($users->hasMorePages())
-                            <x-ui.pagination-next :href="$users->nextPageUrl()" />
-                        @else
-                            <span class="inline-flex h-9 items-center justify-center rounded-md px-2.5 text-sm opacity-50">
-                                <span class="hidden sm:block">{{ __('Next') }}</span>
-                                <x-lucide-chevron-right class="rtl:rotate-180" />
-                            </span>
-                        @endif
-                    </x-ui.pagination-item>
-                </x-ui.pagination-content>
-            </x-ui.pagination>
-        @endif
+        <x-paginator :paginator="$users" />
     </div>
 </x-app-layout>
