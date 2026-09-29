@@ -29,6 +29,7 @@ inside this shell.
 | Item | Route | Visible to |
 |---|---|---|
 | Dashboard | `/dashboard` | all users |
+| My listings | `/listings` | agent only |
 | Administration | `/admin` | admin only |
 | Users | `/admin/users` | admin only |
 | Agents | `/admin/agents` | admin only |
@@ -46,6 +47,7 @@ inside this shell.
 - Administration → [`admin.md`](admin.md)
 - User management → [`admin-users.md`](admin-users.md)
 - Agent management → [`admin-agents.md`](admin-agents.md)
+- Agent listings → [`agent-listings.md`](agent-listings.md)
 - Profile → Breeze default (not yet documented)
 
 ## Wanted changes

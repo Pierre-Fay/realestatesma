@@ -23,6 +23,12 @@ revokes their active sessions and remember-me token.
 A property is only visible to the public after an Admin reviews and approves it. Until then it is inactive
 (`is_active = false` by default). An Agent creates/edits a listing; an Admin approves it before it goes live.
 
+### Agent listing scope and categorization
+An Agent creates and edits only their **own** listings. The Agent assigns the structural, location and amenity
+categories (`property_type`, `property_area`, `property_feature`); the market status (`property_status`) and labels
+(`property_label`) are admin-curated. A listing may have a single featured image; conditionally-shown prices and
+location coordinates are optional.
+
 ### Property publishing, sold and featured status
 Public visibility is governed by `is_active`, independently of `is_sold` and `is_featured`. Only an Admin can change
 publishing state: `approve()` publishes a property and `unpublish()` withdraws it from the market (without marking it
