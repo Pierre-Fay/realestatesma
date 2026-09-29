@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 #[Fillable([
     'name',
@@ -62,5 +63,22 @@ class Agent extends Model
     public function properties(): BelongsToMany
     {
         return $this->belongsToMany(Property::class);
+    }
+
+    /**
+     * Build a unique slug from the given name, appending a numeric suffix on collision.
+     */
+    public static function uniqueSlugFor(string $name): string
+    {
+        $base = Str::slug($name) ?: 'agent';
+        $slug = $base;
+        $suffix = 2;
+
+        while (static::query()->where('slug', $slug)->exists()) {
+            $slug = $base.'-'.$suffix;
+            $suffix++;
+        }
+
+        return $slug;
     }
 }
