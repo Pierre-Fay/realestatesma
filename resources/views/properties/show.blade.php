@@ -1,7 +1,6 @@
 @php
     $images = $property->images;
     $cover = $images->firstWhere('type', \App\Enums\PropertyImageType::FEATURED_IMAGE) ?? $images->first();
-    $thumbnails = $images->reject(fn ($image) => $image->is($cover));
 
     $type = $property->categories->firstWhere('group_type', \App\Enums\CategoryGroupType::PROPERTY_TYPE);
     $area = $property->categories->firstWhere('group_type', \App\Enums\CategoryGroupType::PROPERTY_AREA);
@@ -31,10 +30,10 @@
             {{ __('All properties') }}
         </a>
 
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-3" x-data="{ active: @js($cover?->url) }">
             <div class="bg-muted aspect-[16/9] overflow-hidden rounded-xl border">
                 @if ($cover)
-                    <img src="{{ $cover->url }}" alt="{{ $property->name }}" class="h-full w-full object-cover" />
+                    <img :src="active" src="{{ $cover->url }}" alt="{{ $property->name }}" class="h-full w-full object-cover" />
                 @else
                     <div class="flex h-full items-center justify-center">
                         <x-lucide-image class="text-muted-foreground size-10" aria-hidden="true" />
@@ -42,12 +41,18 @@
                 @endif
             </div>
 
-            @if ($thumbnails->isNotEmpty())
+            @if ($images->count() > 1)
                 <div class="grid grid-cols-3 gap-3 sm:grid-cols-5">
-                    @foreach ($thumbnails as $image)
-                        <div class="bg-muted aspect-[4/3] overflow-hidden rounded-lg border">
+                    @foreach ($images as $image)
+                        <button
+                            type="button"
+                            @click="active = @js($image->url)"
+                            :class="active === @js($image->url) ? 'ring-primary ring-2' : 'opacity-70 hover:opacity-100'"
+                            class="bg-muted aspect-[4/3] overflow-hidden rounded-lg border transition"
+                            aria-label="{{ __('View photo') }}"
+                        >
                             <img src="{{ $image->url }}" alt="" class="h-full w-full object-cover" />
-                        </div>
+                        </button>
                     @endforeach
                 </div>
             @endif
