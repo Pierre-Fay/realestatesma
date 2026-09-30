@@ -122,7 +122,7 @@
             <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 @foreach ($p->images as $image)
                     <label class="group relative block overflow-hidden rounded-lg border">
-                        <img src="{{ Storage::disk('public')->url($image->path) }}" alt="" class="h-28 w-full object-cover" />
+                        <img src="{{ $image->url }}" alt="" class="h-28 w-full object-cover" />
                         @if ($image->isFeatured())
                             <x-ui.badge class="absolute start-2 top-2">{{ __('Featured') }}</x-ui.badge>
                         @endif
