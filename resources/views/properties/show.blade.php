@@ -205,10 +205,9 @@
                 @endforeach
 
                 <x-ui.card>
-                    <x-ui.card-header>
-                        <x-ui.card-title>{{ __('Enquire about this property') }}</x-ui.card-title>
-                    </x-ui.card-header>
-                    <x-ui.card-content class="flex flex-col gap-4">
+                    <div class="flex flex-col gap-4">
+                        <h2 class="text-sm font-semibold">{{ __('Enquire about this property') }}</h2>
+
                         @if (session('status') === 'inquiry-sent')
                             <x-ui.alert tone="success">
                                 <x-lucide-circle-check />
@@ -262,7 +261,7 @@
 
                             <x-ui.button type="submit" class="w-full">{{ __('Send enquiry') }}</x-ui.button>
                         </form>
-                    </x-ui.card-content>
+                    </div>
                 </x-ui.card>
             </aside>
         </div>
