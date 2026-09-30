@@ -77,6 +77,15 @@ test('property images are rendered', function () {
         ->assertSee('properties/gallery-1.jpg');
 });
 
+test('image urls are built from the request host, not APP_URL', function () {
+    $property = visibleProperty();
+    $property->images()->create(['path' => 'properties/cover.jpg', 'type' => PropertyImageType::FEATURED_IMAGE, 'sort_order' => 0]);
+
+    $this->get(route('properties.show', $property))
+        ->assertOk()
+        ->assertSee(asset('storage/properties/cover.jpg'), false);
+});
+
 test('the browsing cards link to the detail page', function () {
     $property = visibleProperty(['name' => 'Linkable Home']);
 

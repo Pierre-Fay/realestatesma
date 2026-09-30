@@ -43,7 +43,7 @@
                         <x-ui.table-cell>
                             <div class="flex items-center gap-3">
                                 @if ($cover)
-                                    <img src="{{ Storage::disk('public')->url($cover->path) }}" alt="" class="size-10 rounded-md object-cover" />
+                                    <img src="{{ $cover->url }}" alt="" class="size-10 rounded-md object-cover" />
                                 @else
                                     <div class="bg-muted flex size-10 items-center justify-center rounded-md">
                                         <x-lucide-image class="text-muted-foreground size-4" />

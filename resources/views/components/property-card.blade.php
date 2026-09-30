@@ -12,7 +12,7 @@
         <div class="bg-muted aspect-[4/3] overflow-hidden">
             @if ($cover)
                 <img
-                    src="{{ Storage::disk('public')->url($cover->path) }}"
+                    src="{{ $cover->url }}"
                     alt="{{ $property->name }}"
                     class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />

@@ -34,7 +34,7 @@
         <div class="flex flex-col gap-3">
             <div class="bg-muted aspect-[16/9] overflow-hidden rounded-xl border">
                 @if ($cover)
-                    <img src="{{ Storage::disk('public')->url($cover->path) }}" alt="{{ $property->name }}" class="h-full w-full object-cover" />
+                    <img src="{{ $cover->url }}" alt="{{ $property->name }}" class="h-full w-full object-cover" />
                 @else
                     <div class="flex h-full items-center justify-center">
                         <x-lucide-image class="text-muted-foreground size-10" aria-hidden="true" />
@@ -46,7 +46,7 @@
                 <div class="grid grid-cols-3 gap-3 sm:grid-cols-5">
                     @foreach ($thumbnails as $image)
                         <div class="bg-muted aspect-[4/3] overflow-hidden rounded-lg border">
-                            <img src="{{ Storage::disk('public')->url($image->path) }}" alt="" class="h-full w-full object-cover" />
+                            <img src="{{ $image->url }}" alt="" class="h-full w-full object-cover" />
                         </div>
                     @endforeach
                 </div>
