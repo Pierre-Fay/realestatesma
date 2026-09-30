@@ -203,6 +203,67 @@
                         </div>
                     </x-ui.card>
                 @endforeach
+
+                <x-ui.card>
+                    <x-ui.card-header>
+                        <x-ui.card-title>{{ __('Enquire about this property') }}</x-ui.card-title>
+                    </x-ui.card-header>
+                    <x-ui.card-content class="flex flex-col gap-4">
+                        @if (session('status') === 'inquiry-sent')
+                            <x-ui.alert tone="success">
+                                <x-lucide-circle-check />
+                                <x-ui.alert-title>{{ __('Thanks! Your message has been sent.') }}</x-ui.alert-title>
+                            </x-ui.alert>
+                        @endif
+
+                        <form method="POST" action="{{ route('properties.inquiries.store', $property) }}" class="flex flex-col gap-4">
+                            @csrf
+
+                            <x-ui.field>
+                                <x-ui.field-label for="name">{{ __('Name') }}</x-ui.field-label>
+                                <x-ui.input id="name" name="name" type="text" :value="old('name')" required />
+                                <x-ui.field-error>{{ $errors->first('name') }}</x-ui.field-error>
+                            </x-ui.field>
+
+                            <x-ui.field>
+                                <x-ui.field-label for="email">{{ __('Email') }}</x-ui.field-label>
+                                <x-ui.input id="email" name="email" type="email" :value="old('email')" required />
+                                <x-ui.field-error>{{ $errors->first('email') }}</x-ui.field-error>
+                            </x-ui.field>
+
+                            <x-ui.field>
+                                <x-ui.field-label for="phone">{{ __('Phone') }}</x-ui.field-label>
+                                <x-ui.input id="phone" name="phone" type="tel" :value="old('phone')" />
+                                <x-ui.field-error>{{ $errors->first('phone') }}</x-ui.field-error>
+                            </x-ui.field>
+
+                            <x-ui.field>
+                                <x-ui.field-label for="message">{{ __('Message') }}</x-ui.field-label>
+                                <x-ui.textarea id="message" name="message" rows="4" required>{{ old('message') }}</x-ui.textarea>
+                                <x-ui.field-error>{{ $errors->first('message') }}</x-ui.field-error>
+                            </x-ui.field>
+
+                            <x-ui.field>
+                                {{-- TODO(CMS-01): link "privacy policy" once the static page is published. --}}
+                                <x-ui.label class="items-start">
+                                    <x-ui.checkbox :native="true" name="consent" value="1" :checked="(bool) old('consent')" class="mt-0.5" />
+                                    {{ __('I agree to be contacted and to the processing of my personal data.') }}
+                                </x-ui.label>
+                                <x-ui.field-error>{{ $errors->first('consent') }}</x-ui.field-error>
+                            </x-ui.field>
+
+                            {{-- Honeypot: hidden from humans, tempting to bots. --}}
+                            <div class="hidden" aria-hidden="true">
+                                <label>
+                                    {{ __('Website') }}
+                                    <input type="text" name="website" tabindex="-1" autocomplete="off" />
+                                </label>
+                            </div>
+
+                            <x-ui.button type="submit" class="w-full">{{ __('Send enquiry') }}</x-ui.button>
+                        </form>
+                    </x-ui.card-content>
+                </x-ui.card>
             </aside>
         </div>
     </div>

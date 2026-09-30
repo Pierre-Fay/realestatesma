@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Agent\PropertyController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PropertyBrowseController;
+use App\Http\Controllers\PropertyInquiryController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -13,6 +14,9 @@ Route::get('/', function () {
 
 Route::get('/properties', [PropertyBrowseController::class, 'index'])->name('properties.index');
 Route::get('/properties/{property:slug}', [PropertyBrowseController::class, 'show'])->name('properties.show');
+Route::post('/properties/{property:slug}/inquiries', [PropertyInquiryController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('properties.inquiries.store');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
