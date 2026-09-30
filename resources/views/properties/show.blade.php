@@ -1,6 +1,5 @@
 @php
     $images = $property->images;
-    $cover = $images->firstWhere('type', \App\Enums\PropertyImageType::FEATURED_IMAGE) ?? $images->first();
 
     $type = $property->categories->firstWhere('group_type', \App\Enums\CategoryGroupType::PROPERTY_TYPE);
     $area = $property->categories->firstWhere('group_type', \App\Enums\CategoryGroupType::PROPERTY_AREA);
@@ -30,30 +29,70 @@
             {{ __('All properties') }}
         </a>
 
-        <div class="flex flex-col gap-3" x-data="{ active: @js($cover?->url) }">
-            <div class="bg-muted aspect-[16/9] overflow-hidden rounded-xl border">
-                @if ($cover)
-                    <img :src="active" src="{{ $cover->url }}" alt="{{ $property->name }}" class="h-full w-full object-cover" />
-                @else
-                    <div class="flex h-full items-center justify-center">
+        <div
+            x-data="{
+                active: 0,
+                total: {{ $images->count() }},
+                prev() { this.active = (this.active - 1 + this.total) % this.total; this.reveal() },
+                next() { this.active = (this.active + 1) % this.total; this.reveal() },
+                go(i) { this.active = i; this.reveal() },
+                reveal() { this.$refs.strip?.children[this.active]?.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }) },
+                overflow: false,
+                measure() { this.overflow = !! this.$refs.strip && this.$refs.strip.scrollWidth > this.$refs.strip.clientWidth + 1 },
+                nudge(dir) { this.$refs.strip?.scrollBy({ left: dir * this.$refs.strip.clientWidth * 0.8, behavior: 'smooth' }) },
+                init() { this.$nextTick(() => this.measure()) }
+            }"
+            x-on:resize.window="measure()"
+            class="flex flex-col gap-3"
+        >
+            <div class="bg-muted relative overflow-hidden rounded-xl border">
+                @forelse ($images as $index => $image)
+                    <img
+                        x-show="active === {{ $index }}"
+                        @if ($index !== 0) style="display: none;" @endif
+                        src="{{ $image->url }}"
+                        alt="{{ $property->name }}"
+                        class="block h-[clamp(16rem,45vh,28rem)] w-full object-cover"
+                    />
+                @empty
+                    <div class="flex h-[clamp(16rem,45vh,28rem)] items-center justify-center">
                         <x-lucide-image class="text-muted-foreground size-10" aria-hidden="true" />
                     </div>
+                @endforelse
+
+                @if ($images->count() > 1)
+                    <x-ui.button type="button" size="icon" variant="secondary" @click="prev()" class="absolute start-3 top-1/2 -translate-y-1/2 rounded-full" aria-label="{{ __('Previous photo') }}">
+                        <x-lucide-chevron-left class="rtl:rotate-180" />
+                    </x-ui.button>
+                    <x-ui.button type="button" size="icon" variant="secondary" @click="next()" class="absolute end-3 top-1/2 -translate-y-1/2 rounded-full" aria-label="{{ __('Next photo') }}">
+                        <x-lucide-chevron-right class="rtl:rotate-180" />
+                    </x-ui.button>
                 @endif
             </div>
 
             @if ($images->count() > 1)
-                <div class="grid grid-cols-3 gap-3 sm:grid-cols-5">
-                    @foreach ($images as $image)
-                        <button
-                            type="button"
-                            @click="active = @js($image->url)"
-                            :class="active === @js($image->url) ? 'ring-primary ring-2' : 'opacity-70 hover:opacity-100'"
-                            class="bg-muted aspect-[4/3] overflow-hidden rounded-lg border transition"
-                            aria-label="{{ __('View photo') }}"
-                        >
-                            <img src="{{ $image->url }}" alt="" class="h-full w-full object-cover" />
-                        </button>
-                    @endforeach
+                <div class="flex items-center gap-2">
+                    <x-ui.button type="button" size="icon-sm" variant="ghost" x-show="overflow" x-cloak @click="nudge(-1)" class="shrink-0" aria-label="{{ __('Scroll photos left') }}">
+                        <x-lucide-chevron-left class="rtl:rotate-180" />
+                    </x-ui.button>
+
+                    <div x-ref="strip" class="flex flex-1 gap-2 overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                        @foreach ($images as $index => $image)
+                            <button
+                                type="button"
+                                @click="go({{ $index }})"
+                                :class="active === {{ $index }} ? 'ring-primary ring-2' : 'opacity-70 hover:opacity-100'"
+                                class="bg-muted aspect-[4/3] h-16 shrink-0 overflow-hidden rounded-lg border transition sm:h-20"
+                                aria-label="{{ __('View photo :number', ['number' => $index + 1]) }}"
+                            >
+                                <img src="{{ $image->url }}" alt="" class="h-full w-full object-cover" />
+                            </button>
+                        @endforeach
+                    </div>
+
+                    <x-ui.button type="button" size="icon-sm" variant="ghost" x-show="overflow" x-cloak @click="nudge(1)" class="shrink-0" aria-label="{{ __('Scroll photos right') }}">
+                        <x-lucide-chevron-right class="rtl:rotate-180" />
+                    </x-ui.button>
                 </div>
             @endif
         </div>
