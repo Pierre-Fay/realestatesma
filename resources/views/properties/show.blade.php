@@ -81,8 +81,8 @@
                             <button
                                 type="button"
                                 @click="go({{ $index }})"
-                                :class="active === {{ $index }} ? 'ring-primary ring-2' : 'opacity-70 hover:opacity-100'"
-                                class="bg-muted aspect-[4/3] h-16 shrink-0 overflow-hidden rounded-lg border transition sm:h-20"
+                                :class="active === {{ $index }} ? 'border-primary' : 'border-transparent opacity-70 hover:opacity-100'"
+                                class="bg-muted aspect-[4/3] h-16 shrink-0 overflow-hidden rounded-lg border-2 transition sm:h-20"
                                 aria-label="{{ __('View photo :number', ['number' => $index + 1]) }}"
                             >
                                 <img src="{{ $image->url }}" alt="" class="h-full w-full object-cover" />
