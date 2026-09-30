@@ -47,6 +47,18 @@ class PropertyBrowseController extends Controller
     }
 
     /**
+     * Public detail page for one approved property.
+     */
+    public function show(Property $property): View
+    {
+        abort_unless($property->is_active && ! $property->is_sold, 404);
+
+        $property->load(['images', 'categories', 'agents']);
+
+        return view('properties.show', ['property' => $property]);
+    }
+
+    /**
      * Options for the type/area/status filter selects.
      *
      * @return array{type: Collection<int, Category>, area: Collection<int, Category>, status: Collection<int, Category>}
