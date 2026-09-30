@@ -6,7 +6,6 @@
         </header>
 
         @php
-            $bedroomOptions = ['' => __('Any')] + [1 => '1+', 2 => '2+', 3 => '3+', 4 => '4+', 5 => '5+'];
             $sortOptions = [
                 'newest' => __('Newest'),
                 'price_asc' => __('Price: low to high'),
@@ -22,22 +21,42 @@
 
             <x-ui.field>
                 <x-ui.field-label for="type">{{ __('Type') }}</x-ui.field-label>
-                <x-ui.select :native="true" id="type" name="type" :value="request('type')" :options="['' => __('Any type')] + $categories['type']->pluck('name', 'id')->all()" />
+                <x-ui.select :native="true" id="type" name="type">
+                    <option value="">{{ __('Any type') }}</option>
+                    @foreach ($categories['type'] as $category)
+                        <option value="{{ $category->id }}" @selected((string) request('type') === (string) $category->id)>{{ $category->name }}</option>
+                    @endforeach
+                </x-ui.select>
             </x-ui.field>
 
             <x-ui.field>
                 <x-ui.field-label for="area">{{ __('Area') }}</x-ui.field-label>
-                <x-ui.select :native="true" id="area" name="area" :value="request('area')" :options="['' => __('Any area')] + $categories['area']->pluck('name', 'id')->all()" />
+                <x-ui.select :native="true" id="area" name="area">
+                    <option value="">{{ __('Any area') }}</option>
+                    @foreach ($categories['area'] as $category)
+                        <option value="{{ $category->id }}" @selected((string) request('area') === (string) $category->id)>{{ $category->name }}</option>
+                    @endforeach
+                </x-ui.select>
             </x-ui.field>
 
             <x-ui.field>
                 <x-ui.field-label for="status">{{ __('Status') }}</x-ui.field-label>
-                <x-ui.select :native="true" id="status" name="status" :value="request('status')" :options="['' => __('Any status')] + $categories['status']->pluck('name', 'id')->all()" />
+                <x-ui.select :native="true" id="status" name="status">
+                    <option value="">{{ __('Any status') }}</option>
+                    @foreach ($categories['status'] as $category)
+                        <option value="{{ $category->id }}" @selected((string) request('status') === (string) $category->id)>{{ $category->name }}</option>
+                    @endforeach
+                </x-ui.select>
             </x-ui.field>
 
             <x-ui.field>
                 <x-ui.field-label for="bedrooms">{{ __('Bedrooms') }}</x-ui.field-label>
-                <x-ui.select :native="true" id="bedrooms" name="bedrooms" :value="request('bedrooms')" :options="$bedroomOptions" />
+                <x-ui.select :native="true" id="bedrooms" name="bedrooms">
+                    <option value="">{{ __('Any') }}</option>
+                    @foreach ([1, 2, 3, 4, 5] as $minimum)
+                        <option value="{{ $minimum }}" @selected((string) request('bedrooms') === (string) $minimum)>{{ $minimum }}+</option>
+                    @endforeach
+                </x-ui.select>
             </x-ui.field>
 
             <x-ui.field>
