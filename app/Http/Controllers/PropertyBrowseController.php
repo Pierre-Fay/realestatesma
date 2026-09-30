@@ -1,0 +1,67 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Enums\CategoryGroupType;
+use App\Http\Requests\PropertyBrowseRequest;
+use App\Models\Category;
+use App\Models\Property;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
+use Illuminate\View\View;
+
+class PropertyBrowseController extends Controller
+{
+    /**
+     * Public listing of approved properties, with search and filters.
+     */
+    public function index(PropertyBrowseRequest $request): View
+    {
+        $filters = $request->validated();
+
+        $query = Property::query()
+            ->where('is_active', true)
+            ->where('is_sold', false)
+            ->with(['images', 'categories'])
+            ->when($filters['q'] ?? null, fn (Builder $q, string $term) => $q->where(fn (Builder $inner) => $inner
+                ->where('name', 'like', "%{$term}%")
+                ->orWhere('address', 'like', "%{$term}%")
+                ->orWhere('description', 'like', "%{$term}%")))
+            ->when($filters['type'] ?? null, fn (Builder $q, int $id) => $q->whereHas('categories', fn (Builder $c) => $c->whereKey($id)))
+            ->when($filters['area'] ?? null, fn (Builder $q, int $id) => $q->whereHas('categories', fn (Builder $c) => $c->whereKey($id)))
+            ->when($filters['status'] ?? null, fn (Builder $q, int $id) => $q->whereHas('categories', fn (Builder $c) => $c->whereKey($id)))
+            ->when($filters['bedrooms'] ?? null, fn (Builder $q, int $bedrooms) => $q->where('bedrooms', '>=', $bedrooms))
+            ->when($filters['price_min'] ?? null, fn (Builder $q, $min) => $q->where('price_usd', '>=', $min))
+            ->when($filters['price_max'] ?? null, fn (Builder $q, $max) => $q->where('price_usd', '<=', $max));
+
+        match ($filters['sort'] ?? 'newest') {
+            'price_asc' => $query->orderBy('price_usd'),
+            'price_desc' => $query->orderByDesc('price_usd'),
+            default => $query->latest(),
+        };
+
+        return view('properties.index', [
+            'properties' => $query->paginate(12)->withQueryString(),
+            'categories' => $this->filterCategories(),
+        ]);
+    }
+
+    /**
+     * Options for the type/area/status filter selects.
+     *
+     * @return array{type: Collection<int, Category>, area: Collection<int, Category>, status: Collection<int, Category>}
+     */
+    private function filterCategories(): array
+    {
+        $options = fn (CategoryGroupType $group): Collection => Category::query()
+            ->where('group_type', $group)
+            ->orderBy('category_order')
+            ->get();
+
+        return [
+            'type' => $options(CategoryGroupType::PROPERTY_TYPE),
+            'area' => $options(CategoryGroupType::PROPERTY_AREA),
+            'status' => $options(CategoryGroupType::PROPERTY_STATUS),
+        ];
+    }
+}

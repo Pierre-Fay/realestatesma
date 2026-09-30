@@ -4,11 +4,14 @@ use App\Http\Controllers\Admin\AgentController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Agent\PropertyController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PropertyBrowseController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/properties', [PropertyBrowseController::class, 'index'])->name('properties.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
