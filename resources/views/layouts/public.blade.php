@@ -27,6 +27,12 @@
                 >
                     {{ __('Properties') }}
                 </a>
+                <a
+                    href="{{ route('contact') }}"
+                    class="text-muted-foreground hover:text-foreground font-medium transition-colors"
+                >
+                    {{ __('Contact') }}
+                </a>
             </nav>
         </div>
     </header>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AgentController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Agent\PropertyController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PropertyBrowseController;
 use App\Http\Controllers\PropertyInquiryController;
@@ -17,6 +18,11 @@ Route::get('/properties/{property:slug}', [PropertyBrowseController::class, 'sho
 Route::post('/properties/{property:slug}/inquiries', [PropertyInquiryController::class, 'store'])
     ->middleware('throttle:5,1')
     ->name('properties.inquiries.store');
+
+Route::get('/contact', [ContactController::class, 'create'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('contact.store');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

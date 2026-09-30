@@ -13,6 +13,7 @@ Accessibility, Wanted changes, Out of scope.
 | [`login.md`](login.md) | Login page | `/login` |
 | [`properties-browse.md`](properties-browse.md) | Public property browse/search | `/properties` |
 | [`property-detail.md`](property-detail.md) | Public property detail | `/properties/{slug}` |
+| [`contact.md`](contact.md) | General contact request | `/contact` |
 | [`dashboard.md`](dashboard.md) | Dashboard (back office home) | `/dashboard` |
 | [`admin.md`](admin.md) | Administration | `/admin` |
 | [`admin-users.md`](admin-users.md) | User management | `/admin/users` |
