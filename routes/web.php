@@ -12,6 +12,7 @@ Route::get('/', function () {
 });
 
 Route::get('/properties', [PropertyBrowseController::class, 'index'])->name('properties.index');
+Route::get('/properties/{property:slug}', [PropertyBrowseController::class, 'show'])->name('properties.show');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
