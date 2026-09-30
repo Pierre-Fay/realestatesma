@@ -3,10 +3,12 @@
 namespace Database\Seeders;
 
 use App\Enums\CategoryGroupType;
+use App\Enums\PropertyImageType;
 use App\Models\Agent;
 use App\Models\Category;
 use App\Models\Property;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PropertySeeder extends Seeder
@@ -23,6 +25,20 @@ class PropertySeeder extends Seeder
         ['name' => 'Hacienda Guadalupe', 'price_usd' => 2400000, 'price_mxn' => 41000000, 'bedrooms' => 6, 'bathrooms' => 5, 'half_bathrooms' => 2, 'parking_spaces' => 4, 'lot_meters' => 1400, 'construction_meters' => 980],
         ['name' => 'Casa Atascadero', 'price_usd' => 675000, 'price_mxn' => 11500000, 'bedrooms' => 3, 'bathrooms' => 3, 'half_bathrooms' => 1, 'parking_spaces' => 2, 'lot_meters' => 380, 'construction_meters' => 300],
         ['name' => 'Loft San Antonio', 'price_usd' => 295000, 'price_mxn' => 5000000, 'bedrooms' => 1, 'bathrooms' => 1, 'half_bathrooms' => 0, 'parking_spaces' => 1, 'lot_meters' => 0, 'construction_meters' => 85],
+    ];
+
+    /**
+     * Base RGB colours used to generate the placeholder photos.
+     *
+     * @var list<array{int, int, int}>
+     */
+    private array $palette = [
+        [56, 74, 108],
+        [122, 96, 74],
+        [64, 96, 86],
+        [104, 72, 86],
+        [70, 82, 110],
+        [96, 84, 60],
     ];
 
     /**
@@ -61,6 +77,70 @@ class PropertySeeder extends Seeder
                 $features->isNotEmpty() ? $features[$index % $features->count()] : null,
                 $status,
             ]));
+
+            if ($property->images()->doesntExist()) {
+                $this->seedImages($property, $index);
+            }
         }
+    }
+
+    /**
+     * Generate one featured image plus a small gallery for a demo listing.
+     */
+    private function seedImages(Property $property, int $seed): void
+    {
+        $base = 'properties/'.$property->slug;
+
+        $this->makePlaceholder($base.'-cover.jpg', $property->name.' (featured)', $seed);
+        $property->images()->create([
+            'path' => $base.'-cover.jpg',
+            'type' => PropertyImageType::FEATURED_IMAGE,
+            'sort_order' => 0,
+        ]);
+
+        for ($n = 1; $n <= 3; $n++) {
+            $this->makePlaceholder($base.'-'.$n.'.jpg', $property->name.' (photo '.$n.')', $seed + $n);
+            $property->images()->create([
+                'path' => $base.'-'.$n.'.jpg',
+                'type' => PropertyImageType::GALLERY,
+                'sort_order' => $n,
+            ]);
+        }
+    }
+
+    /**
+     * Generate a simple gradient placeholder JPEG and store it on the public disk.
+     */
+    private function makePlaceholder(string $path, string $label, int $seed): void
+    {
+        $width = 1200;
+        $height = 800;
+        $image = imagecreatetruecolor($width, $height);
+
+        [$r, $g, $b] = $this->palette[$seed % count($this->palette)];
+
+        for ($y = 0; $y < $height; $y++) {
+            $t = $y / $height;
+            $color = imagecolorallocate(
+                $image,
+                (int) min(255, $r + (255 - $r) * $t * 0.4),
+                (int) min(255, $g + (255 - $g) * $t * 0.4),
+                (int) min(255, $b + (255 - $b) * $t * 0.4),
+            );
+            imagefilledrectangle($image, 0, $y, $width, $y, $color);
+        }
+
+        $panel = imagecolorallocatealpha($image, 255, 255, 255, 100);
+        imagefilledrectangle($image, 80, 80, $width - 80, $height - 160, $panel);
+
+        $text = imagecolorallocate($image, 255, 255, 255);
+        imagestring($image, 5, 110, 110, $label, $text);
+
+        ob_start();
+        imagejpeg($image, null, 80);
+        $data = (string) ob_get_clean();
+        imagedestroy($image);
+
+        Storage::disk('public')->put($path, $data);
     }
 }
