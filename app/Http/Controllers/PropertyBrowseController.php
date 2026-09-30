@@ -23,14 +23,14 @@ class PropertyBrowseController extends Controller
             ->where('is_active', true)
             ->where('is_sold', false)
             ->with(['images', 'categories'])
-            ->when($filters['q'] ?? null, fn (Builder $q, string $term) => $q->where(fn (Builder $inner) => $inner
+            ->when($filters['q'] ?? null, fn (Builder $q, $term) => $q->where(fn (Builder $inner) => $inner
                 ->where('name', 'like', "%{$term}%")
                 ->orWhere('address', 'like', "%{$term}%")
                 ->orWhere('description', 'like', "%{$term}%")))
-            ->when($filters['type'] ?? null, fn (Builder $q, int $id) => $q->whereHas('categories', fn (Builder $c) => $c->whereKey($id)))
-            ->when($filters['area'] ?? null, fn (Builder $q, int $id) => $q->whereHas('categories', fn (Builder $c) => $c->whereKey($id)))
-            ->when($filters['status'] ?? null, fn (Builder $q, int $id) => $q->whereHas('categories', fn (Builder $c) => $c->whereKey($id)))
-            ->when($filters['bedrooms'] ?? null, fn (Builder $q, int $bedrooms) => $q->where('bedrooms', '>=', $bedrooms))
+            ->when($filters['type'] ?? null, fn (Builder $q, $id) => $q->whereHas('categories', fn (Builder $c) => $c->whereKey((int) $id)))
+            ->when($filters['area'] ?? null, fn (Builder $q, $id) => $q->whereHas('categories', fn (Builder $c) => $c->whereKey((int) $id)))
+            ->when($filters['status'] ?? null, fn (Builder $q, $id) => $q->whereHas('categories', fn (Builder $c) => $c->whereKey((int) $id)))
+            ->when($filters['bedrooms'] ?? null, fn (Builder $q, $bedrooms) => $q->where('bedrooms', '>=', (int) $bedrooms))
             ->when($filters['price_min'] ?? null, fn (Builder $q, $min) => $q->where('price_usd', '>=', $min))
             ->when($filters['price_max'] ?? null, fn (Builder $q, $max) => $q->where('price_usd', '<=', $max));
 

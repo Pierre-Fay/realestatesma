@@ -107,3 +107,23 @@ test('properties can be sorted by price', function () {
         ->assertOk()
         ->assertSeeInOrder(['Pricey Home', 'Cheap Home']);
 });
+
+test('the filter selects submit category ids, not labels', function () {
+    $type = Category::factory()->create(['group_type' => CategoryGroupType::PROPERTY_TYPE, 'name' => 'Villa']);
+    $area = Category::factory()->create(['group_type' => CategoryGroupType::PROPERTY_AREA, 'name' => 'Centro']);
+
+    $this->get(route('properties.index'))
+        ->assertOk()
+        ->assertSee('value="'.$type->id.'"', false)
+        ->assertSee('value="'.$area->id.'"', false)
+        ->assertDontSee('value="Villa"', false)
+        ->assertDontSee('value="Centro"', false);
+});
+
+test('filters accept browser query values without error', function () {
+    activeProperty(['name' => 'Some Home', 'bedrooms' => 5]);
+
+    $this->get('/properties?q=&type=&area=&status=&bedrooms=5&price_min=&price_max=&sort=newest')
+        ->assertOk()
+        ->assertSee('Some Home');
+});
