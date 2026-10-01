@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AgentController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Agent\LeadController;
 use App\Http\Controllers\Agent\PropertyController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
@@ -47,6 +48,9 @@ Route::middleware(['auth', 'verified', 'agent'])->group(function () {
     Route::post('/listings', [PropertyController::class, 'store'])->name('listings.store');
     Route::get('/listings/{property}/edit', [PropertyController::class, 'edit'])->name('listings.edit');
     Route::put('/listings/{property}', [PropertyController::class, 'update'])->name('listings.update');
+
+    Route::get('/leads', [LeadController::class, 'index'])->name('leads.index');
+    Route::patch('/leads/{lead}', [LeadController::class, 'update'])->name('leads.update');
 });
 
 Route::middleware('auth')->group(function () {

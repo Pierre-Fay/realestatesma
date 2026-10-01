@@ -30,6 +30,7 @@ inside this shell.
 |---|---|---|
 | Dashboard | `/dashboard` | all users |
 | My listings | `/listings` | agent only |
+| Leads | `/leads` | agent only |
 | Administration | `/admin` | admin only |
 | Users | `/admin/users` | admin only |
 | Agents | `/admin/agents` | admin only |
@@ -48,6 +49,7 @@ inside this shell.
 - User management → [`admin-users.md`](admin-users.md)
 - Agent management → [`admin-agents.md`](admin-agents.md)
 - Agent listings → [`agent-listings.md`](agent-listings.md)
+- Leads → [`agent-leads.md`](agent-leads.md)
 - Profile → Breeze default (not yet documented)
 
 ## Wanted changes

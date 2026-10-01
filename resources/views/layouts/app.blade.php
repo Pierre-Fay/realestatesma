@@ -47,6 +47,12 @@
                                     <span>{{ __('My listings') }}</span>
                                 </x-ui.sidebar-menu-button>
                             </x-ui.sidebar-menu-item>
+                            <x-ui.sidebar-menu-item>
+                                <x-ui.sidebar-menu-button href="{{ route('leads.index') }}" :is-active="request()->routeIs('leads.*')">
+                                    <x-lucide-inbox />
+                                    <span>{{ __('Leads') }}</span>
+                                </x-ui.sidebar-menu-button>
+                            </x-ui.sidebar-menu-item>
                         @endif
 
                         @if (Auth::user()->isAdmin())

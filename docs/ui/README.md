@@ -19,3 +19,4 @@ Accessibility, Wanted changes, Out of scope.
 | [`admin-users.md`](admin-users.md) | User management | `/admin/users` |
 | [`admin-agents.md`](admin-agents.md) | Agent management | `/admin/agents` |
 | [`agent-listings.md`](agent-listings.md) | Agent listing management | `/listings` |
+| [`agent-leads.md`](agent-leads.md) | Agent lead pipeline | `/leads` |
