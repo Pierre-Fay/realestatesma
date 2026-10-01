@@ -218,11 +218,19 @@
                         <form method="POST" action="{{ route('properties.inquiries.store', $property) }}" class="flex flex-col gap-4">
                             @csrf
 
-                            <x-ui.field>
-                                <x-ui.field-label for="name">{{ __('Name') }}</x-ui.field-label>
-                                <x-ui.input id="name" name="name" type="text" :value="old('name')" required />
-                                <x-ui.field-error>{{ $errors->first('name') }}</x-ui.field-error>
-                            </x-ui.field>
+                            <div class="grid gap-4 sm:grid-cols-2">
+                                <x-ui.field>
+                                    <x-ui.field-label for="first_name">{{ __('First name') }}</x-ui.field-label>
+                                    <x-ui.input id="first_name" name="first_name" type="text" :value="old('first_name')" required />
+                                    <x-ui.field-error>{{ $errors->first('first_name') }}</x-ui.field-error>
+                                </x-ui.field>
+
+                                <x-ui.field>
+                                    <x-ui.field-label for="last_name">{{ __('Last name') }}</x-ui.field-label>
+                                    <x-ui.input id="last_name" name="last_name" type="text" :value="old('last_name')" required />
+                                    <x-ui.field-error>{{ $errors->first('last_name') }}</x-ui.field-error>
+                                </x-ui.field>
+                            </div>
 
                             <x-ui.field>
                                 <x-ui.field-label for="email">{{ __('Email') }}</x-ui.field-label>

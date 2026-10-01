@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\LeadStatus;
 use App\Http\Requests\StorePropertyInquiryRequest;
+use App\Models\Lead;
 use App\Models\Property;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
@@ -10,7 +12,8 @@ use Illuminate\Support\Facades\Redirect;
 class PropertyInquiryController extends Controller
 {
     /**
-     * Store a visitor's inquiry about a public property.
+     * Store a visitor's inquiry about a public property as a lead
+     * assigned to the property's agent.
      */
     public function store(StorePropertyInquiryRequest $request, Property $property): RedirectResponse
     {
@@ -21,7 +24,18 @@ class PropertyInquiryController extends Controller
             return Redirect::route('properties.show', $property)->with('status', 'inquiry-sent');
         }
 
-        $property->inquiries()->create($request->safe()->only(['name', 'email', 'phone', 'message']));
+        $agent = $property->agents()->orderBy('agent_order')->first();
+
+        Lead::create([
+            'first_name' => $request->validated('first_name'),
+            'last_name' => $request->validated('last_name'),
+            'email' => $request->validated('email'),
+            'phone' => $request->validated('phone'),
+            'interested_in' => $property->name,
+            'notes' => $request->validated('message'),
+            'status' => LeadStatus::NEW,
+            'agent_id' => $agent?->id,
+        ]);
 
         return Redirect::route('properties.show', $property)->with('status', 'inquiry-sent');
     }
