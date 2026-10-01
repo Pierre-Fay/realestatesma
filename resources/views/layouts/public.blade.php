@@ -28,6 +28,12 @@
                     {{ __('Properties') }}
                 </a>
                 <a
+                    href="{{ route('about') }}"
+                    class="text-muted-foreground hover:text-foreground font-medium transition-colors"
+                >
+                    {{ __('About') }}
+                </a>
+                <a
                     href="{{ route('contact') }}"
                     class="text-muted-foreground hover:text-foreground font-medium transition-colors"
                 >
@@ -42,8 +48,12 @@
     </main>
 
     <footer class="border-t">
-        <div class="text-muted-foreground mx-auto max-w-6xl px-4 py-8 text-sm sm:px-6 lg:px-8">
-            {{ config('app.name', 'Real Estate SMA') }} — {{ __('Luxury real estate in San Miguel de Allende, Mexico.') }}
+        <div class="text-muted-foreground mx-auto flex max-w-6xl flex-col gap-2 px-4 py-8 text-sm sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+            <p>{{ config('app.name', 'Real Estate SMA') }} — {{ __('Luxury real estate in San Miguel de Allende, Mexico.') }}</p>
+            <div class="flex gap-4">
+                <a href="{{ route('legal') }}" class="hover:text-foreground transition-colors">{{ __('Legal notice') }}</a>
+                <a href="{{ route('privacy') }}" class="hover:text-foreground transition-colors">{{ __('Privacy policy') }}</a>
+            </div>
         </div>
     </footer>
 </body>
