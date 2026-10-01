@@ -251,10 +251,12 @@
                             </x-ui.field>
 
                             <x-ui.field>
-                                {{-- TODO(CMS-01): link "privacy policy" once the static page is published. --}}
                                 <x-ui.label class="items-start">
                                     <x-ui.checkbox :native="true" name="consent" value="1" :checked="(bool) old('consent')" class="mt-0.5" />
-                                    {{ __('I agree to be contacted and to the processing of my personal data.') }}
+                                    <span>
+                                        {{ __('I agree to be contacted and to the processing of my personal data, as described in the') }}
+                                        <a href="{{ route('privacy') }}" target="_blank" rel="noopener" class="text-primary underline">{{ __('privacy policy') }}</a>.
+                                    </span>
                                 </x-ui.label>
                                 <x-ui.field-error>{{ $errors->first('consent') }}</x-ui.field-error>
                             </x-ui.field>

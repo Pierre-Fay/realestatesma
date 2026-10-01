@@ -28,7 +28,7 @@ listing agent — so a Visitor can decide whether to inquire. Rendered in the pu
 - Fields: First/Last name (required), Email (required), Phone (optional), Message (required), plus an explicit **GDPR consent checkbox** (required, `accepted`).
 - A **honeypot** field (`website`, visually hidden) silently discards bot submissions.
 - Creates a **`Lead` assigned to the property's agent** (`interested_in` = property name, `notes` = the visitor's message); unassigned when the property has no agent. Success shows a flash alert on the page.
-- Consent is only validated, not stored (per the model). **TODO (CMS-01)**: link "privacy policy" in the consent label once the static page exists.
+- Consent is only validated, not stored (per the model). The consent label links to the **privacy policy** (`/privacy`).
 
 ## Notes
 - The browsing cards (`/properties`) link here.
