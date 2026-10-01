@@ -1,7 +1,9 @@
 <?php
 
+use App\Enums\LeadStatus;
+use App\Models\Agent;
+use App\Models\Lead;
 use App\Models\Property;
-use App\Models\PropertyInquiry;
 
 function inquiryProperty(array $attributes = []): Property
 {
@@ -14,7 +16,8 @@ function inquiryProperty(array $attributes = []): Property
 function inquiryPayload(array $overrides = []): array
 {
     return array_merge([
-        'name' => 'Jane Visitor',
+        'first_name' => 'Jane',
+        'last_name' => 'Visitor',
         'email' => 'jane@example.com',
         'phone' => '+52 415 000 0000',
         'message' => 'I would like to visit this property.',
@@ -22,18 +25,34 @@ function inquiryPayload(array $overrides = []): array
     ], $overrides);
 }
 
-test('guests can submit a property inquiry', function () {
-    $property = inquiryProperty();
+test('guests can submit a property inquiry as a lead assigned to the agent', function () {
+    $property = inquiryProperty(['name' => 'Casa del Sol']);
+    $agent = Agent::factory()->create(['name' => 'Sofia', 'agent_order' => 0]);
+    $property->agents()->attach($agent);
 
     $this->post(route('properties.inquiries.store', $property), inquiryPayload())
         ->assertRedirect(route('properties.show', $property))
         ->assertSessionHas('status', 'inquiry-sent');
 
-    $this->assertDatabaseHas('property_inquiries', [
-        'property_id' => $property->id,
-        'name' => 'Jane Visitor',
-        'email' => 'jane@example.com',
-    ]);
+    $lead = Lead::query()->first();
+
+    expect($lead)->not->toBeNull()
+        ->and($lead->first_name)->toBe('Jane')
+        ->and($lead->last_name)->toBe('Visitor')
+        ->and($lead->email)->toBe('jane@example.com')
+        ->and($lead->interested_in)->toBe('Casa del Sol')
+        ->and($lead->notes)->toBe('I would like to visit this property.')
+        ->and($lead->status)->toBe(LeadStatus::NEW)
+        ->and($lead->agent_id)->toBe($agent->id);
+});
+
+test('a property inquiry with no agent leaves the lead unassigned', function () {
+    $property = inquiryProperty();
+
+    $this->post(route('properties.inquiries.store', $property), inquiryPayload())
+        ->assertRedirect(route('properties.show', $property));
+
+    expect(Lead::query()->first()->agent_id)->toBeNull();
 });
 
 test('the inquiry is validated', function () {
@@ -41,9 +60,9 @@ test('the inquiry is validated', function () {
 
     $this->from(route('properties.show', $property))
         ->post(route('properties.inquiries.store', $property), [])
-        ->assertSessionHasErrors(['name', 'email', 'message', 'consent']);
+        ->assertSessionHasErrors(['first_name', 'last_name', 'email', 'message', 'consent']);
 
-    expect(PropertyInquiry::query()->count())->toBe(0);
+    expect(Lead::query()->count())->toBe(0);
 });
 
 test('consent is required', function () {
@@ -52,7 +71,7 @@ test('consent is required', function () {
     $this->post(route('properties.inquiries.store', $property), inquiryPayload(['consent' => null]))
         ->assertSessionHasErrors('consent');
 
-    expect(PropertyInquiry::query()->count())->toBe(0);
+    expect(Lead::query()->count())->toBe(0);
 });
 
 test('inquiries cannot be sent for invisible properties', function () {
@@ -62,7 +81,7 @@ test('inquiries cannot be sent for invisible properties', function () {
     $sold = Property::factory()->create(['is_active' => true, 'is_sold' => true]);
     $this->post(route('properties.inquiries.store', $sold), inquiryPayload())->assertNotFound();
 
-    expect(PropertyInquiry::query()->count())->toBe(0);
+    expect(Lead::query()->count())->toBe(0);
 });
 
 test('the honeypot silently discards bot submissions', function () {
@@ -72,7 +91,7 @@ test('the honeypot silently discards bot submissions', function () {
         ->assertRedirect(route('properties.show', $property))
         ->assertSessionHas('status', 'inquiry-sent');
 
-    expect(PropertyInquiry::query()->count())->toBe(0);
+    expect(Lead::query()->count())->toBe(0);
 });
 
 test('the inquiry endpoint is rate limited', function () {
