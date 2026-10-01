@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AgentController;
+use App\Http\Controllers\Admin\PropertyController as AdminPropertyController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Agent\LeadController;
 use App\Http\Controllers\Agent\PropertyController;
@@ -40,6 +41,11 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/admin/agents', [AgentController::class, 'index'])->name('admin.agents.index');
     Route::get('/admin/agents/create', [AgentController::class, 'create'])->name('admin.agents.create');
     Route::post('/admin/agents', [AgentController::class, 'store'])->name('admin.agents.store');
+
+    Route::get('/admin/properties', [AdminPropertyController::class, 'index'])->name('admin.properties.index');
+    Route::patch('/admin/properties/{property}/approve', [AdminPropertyController::class, 'approve'])->name('admin.properties.approve');
+    Route::patch('/admin/properties/{property}/unpublish', [AdminPropertyController::class, 'unpublish'])->name('admin.properties.unpublish');
+    Route::delete('/admin/properties/{property}', [AdminPropertyController::class, 'destroy'])->name('admin.properties.destroy');
 });
 
 Route::middleware(['auth', 'verified', 'agent'])->group(function () {

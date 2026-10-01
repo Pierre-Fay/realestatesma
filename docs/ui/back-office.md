@@ -34,6 +34,7 @@ inside this shell.
 | Administration | `/admin` | admin only |
 | Users | `/admin/users` | admin only |
 | Agents | `/admin/agents` | admin only |
+| Properties | `/admin/properties` | admin only |
 
 ### User menu (footer)
 - Avatar (initials), name, email.
@@ -48,6 +49,7 @@ inside this shell.
 - Administration → [`admin.md`](admin.md)
 - User management → [`admin-users.md`](admin-users.md)
 - Agent management → [`admin-agents.md`](admin-agents.md)
+- Property approval → [`admin-properties.md`](admin-properties.md)
 - Agent listings → [`agent-listings.md`](agent-listings.md)
 - Leads → [`agent-leads.md`](agent-leads.md)
 - Profile → Breeze default (not yet documented)

@@ -71,6 +71,16 @@ class Property extends Model
     }
 
     /**
+     * Remove the property's image files from disk when it is deleted.
+     */
+    protected static function booted(): void
+    {
+        static::deleting(function (Property $property): void {
+            $property->images->each->delete();
+        });
+    }
+
+    /**
      * Agents assigned to this property
      */
     public function agents(): BelongsToMany

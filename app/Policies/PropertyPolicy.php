@@ -33,4 +33,28 @@ class PropertyPolicy
         return $agent !== null
             && $property->agents()->whereKey($agent->getKey())->exists();
     }
+
+    /**
+     * Only an admin may publish (approve) a listing.
+     */
+    public function approve(User $user, Property $property): bool
+    {
+        return $user->isAdmin();
+    }
+
+    /**
+     * Only an admin may unpublish a listing.
+     */
+    public function unpublish(User $user, Property $property): bool
+    {
+        return $user->isAdmin();
+    }
+
+    /**
+     * Only an admin may delete a listing.
+     */
+    public function delete(User $user, Property $property): bool
+    {
+        return $user->isAdmin();
+    }
 }
