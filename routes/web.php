@@ -26,6 +26,10 @@ Route::post('/contact', [ContactController::class, 'store'])
     ->middleware('throttle:5,1')
     ->name('contact.store');
 
+Route::view('/about', 'pages.about')->name('about');
+Route::view('/legal', 'pages.legal')->name('legal');
+Route::view('/privacy', 'pages.privacy')->name('privacy');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
