@@ -151,15 +151,6 @@ class PropertyImage <<entity>> {
     + setAsFeatured(): void
 }
 
-class PropertyInquiry <<entity>> {
-    - id: Integer
-    + name: String
-    + email: String
-    + phone: String
-    + message: Text
-    + created_at: Timestamp
-}
-
 ' -- Service layer --
 
 class AgentService <<service>> {
@@ -197,7 +188,6 @@ Agent "0..*" -- "0..*" Property : lists >
 Category "0..*" -- "0..*" Property : classifies >
 Property "1" *-- "0..*" OpenHouse : hosts
 Property "1" *-- "0..*" PropertyImage : has
-Property "1" *-- "0..*" PropertyInquiry : receives
 
 User ..> UserRole
 Category ..> CategoryGroupType
@@ -209,6 +199,13 @@ note bottom of Category
   agent_property pivot table; Property-Category via the
   category_property pivot table (Laravel alphabetical
   naming; the DDL uses property_agent / property_category).
+end note
+
+note bottom of Lead
+  A property inquiry is recorded as a Lead assigned to the
+  property's agent: interested_in = property name, notes =
+  the visitor's message. The legacy PropertyInquiry entity
+  is unused.
 end note
 
 AgentService ..> Agent : uses

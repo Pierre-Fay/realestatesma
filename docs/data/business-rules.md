@@ -42,6 +42,12 @@ opportunity fails — no answer to contact attempts, criteria mismatch, or lost 
 contact (`contacted`), qualifies the lead if budget and interest align (`qualified`), and ends it `closed` (deal won)
 or `lost`.
 
+### Lead creation
+A lead is created through two paths: the general contact page creates an **unassigned** lead (an Admin assigns it
+later), while a property inquiry creates a lead **assigned to the property's agent** (the first agent, ordered by
+`agent_order`). For a property inquiry, the property name is stored in `interested_in` and the visitor's message in
+`notes`. A property with no assigned agent yields an unassigned lead.
+
 ### Lead assignment
 A lead can exist without an assigned agent (`agent_id` nullable) from the moment it is created. An Admin assigns the
 lead to an Agent; a lead may also be reassigned to another Agent (by an Admin or an Agent) so leads are not lost.
