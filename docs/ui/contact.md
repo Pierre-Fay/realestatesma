@@ -26,7 +26,7 @@ Submitted to `POST /contact` (rate-limited `throttle:5,1`):
 - Success shows a flash alert on the page.
 
 ## Notes
-- **TODO (CMS-01)**: link "privacy policy" in the consent label once the static page exists.
+- The consent label links to the **privacy policy** (`/privacy`).
 - Reached from the public nav ("Contact").
 - Creates an **unassigned** lead; a property inquiry (on a property detail page) creates a lead **assigned to that property's agent** instead.
 
