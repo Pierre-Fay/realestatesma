@@ -22,6 +22,7 @@ revokes their active sessions and remember-me token.
 ### Property approval workflow
 A property is only visible to the public after an Admin reviews and approves it. Until then it is inactive
 (`is_active = false` by default). An Agent creates/edits a listing; an Admin approves it before it goes live.
+An Admin may also **delete** a listing, permanently removing it and its photo files.
 
 ### Category vocabulary vs. assignment (design decision)
 The category **vocabulary** is admin-managed — an Admin creates, edits and reorders categories (CAT-01).
