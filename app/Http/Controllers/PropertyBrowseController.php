@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CategoryGroupType;
 use App\Http\Requests\PropertyBrowseRequest;
 use App\Models\Category;
 use App\Models\Property;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class PropertyBrowseController extends Controller
@@ -42,7 +40,7 @@ class PropertyBrowseController extends Controller
 
         return view('properties.index', [
             'properties' => $query->paginate(12)->withQueryString(),
-            'categories' => $this->filterCategories(),
+            'categories' => Category::filterOptions(),
         ]);
     }
 
@@ -56,24 +54,5 @@ class PropertyBrowseController extends Controller
         $property->load(['images', 'categories', 'agents']);
 
         return view('properties.show', ['property' => $property]);
-    }
-
-    /**
-     * Options for the type/area/status filter selects.
-     *
-     * @return array{type: Collection<int, Category>, area: Collection<int, Category>, status: Collection<int, Category>}
-     */
-    private function filterCategories(): array
-    {
-        $options = fn (CategoryGroupType $group): Collection => Category::query()
-            ->where('group_type', $group)
-            ->orderBy('category_order')
-            ->get();
-
-        return [
-            'type' => $options(CategoryGroupType::PROPERTY_TYPE),
-            'area' => $options(CategoryGroupType::PROPERTY_AREA),
-            'status' => $options(CategoryGroupType::PROPERTY_STATUS),
-        ];
     }
 }
