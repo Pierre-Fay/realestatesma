@@ -51,7 +51,16 @@ later), while a property inquiry creates a lead **assigned to the property's age
 
 ### Lead assignment
 A lead can exist without an assigned agent (`agent_id` nullable) from the moment it is created. An Admin assigns the
-lead to an Agent; a lead may also be reassigned to another Agent (by an Admin or an Agent) so leads are not lost.
+lead to an Agent, may reassign any lead, and may unassign any lead by clearing `agent_id`. An Agent may reassign
+only a lead currently assigned to their own profile, and must choose another Agent; agents cannot claim unassigned
+leads or unassign leads. Assignment changes preserve the lead's status, contact details, interest, budget and notes.
+The former Agent immediately loses access and the new Agent gains access through their existing lead area.
+
+### Eligibility for manual lead assignment
+New manual assignments and reassignments require an Agent linked to an enabled User with the `agent` role.
+Public profile visibility (`Agent.is_active`) does not affect eligibility. Profiles with no login or a disabled
+login cannot receive new manual assignments; their existing leads remain visible to Admins and can be reassigned
+or unassigned. This eligibility rule applies to manual assignment, not the existing property-inquiry routing.
 
 ### Admin lead oversight
 An Admin can view every lead from both creation paths, including unassigned leads, leads assigned to any Agent
