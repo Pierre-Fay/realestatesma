@@ -8,6 +8,7 @@
         </x-ui.card-header>
         <x-ui.card-content>
             <x-ui.button :href="route('admin.users.index')" variant="outline">{{ __('Manage users') }}</x-ui.button>
+            <x-ui.button :href="route('admin.leads.index')" variant="outline">{{ __('Manage leads') }}</x-ui.button>
         </x-ui.card-content>
     </x-ui.card>
 </x-app-layout>

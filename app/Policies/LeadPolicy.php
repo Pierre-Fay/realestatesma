@@ -8,11 +8,11 @@ use App\Models\User;
 class LeadPolicy
 {
     /**
-     * An agent may browse their own leads.
+     * Admins may browse all leads; agents may browse their own leads.
      */
     public function viewAny(User $user): bool
     {
-        return $user->agent !== null;
+        return $user->isAdmin() || $user->agent !== null;
     }
 
     /**

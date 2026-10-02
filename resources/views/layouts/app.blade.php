@@ -80,6 +80,12 @@
                                     <span>{{ __('Properties') }}</span>
                                 </x-ui.sidebar-menu-button>
                             </x-ui.sidebar-menu-item>
+                            <x-ui.sidebar-menu-item>
+                                <x-ui.sidebar-menu-button href="{{ route('admin.leads.index') }}" :is-active="request()->routeIs('admin.leads.*')">
+                                    <x-lucide-inbox />
+                                    <span>{{ __('All leads') }}</span>
+                                </x-ui.sidebar-menu-button>
+                            </x-ui.sidebar-menu-item>
                         @endif
                     </x-ui.sidebar-menu>
                 </x-ui.sidebar-group>
