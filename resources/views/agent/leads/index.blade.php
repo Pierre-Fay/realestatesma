@@ -66,20 +66,23 @@
                                 {{ $statusMeta[$lead->status->value]['label'] }}
                             </x-ui.badge>
                         </x-ui.table-cell>
-                        <x-ui.table-cell class="text-end">
-                            <form method="POST" action="{{ route('leads.update', $lead) }}" class="inline-block">
-                                @csrf
-                                @method('PATCH')
-                                <x-ui.select
-                                    :native="true"
-                                    name="status"
-                                    :value="''"
-                                    :placeholder="__('Change status…')"
-                                    :options="$statusOptions"
-                                    class="h-8 w-40 text-xs"
-                                    @change="$el.form.submit()"
-                                />
-                            </form>
+                        <x-ui.table-cell>
+                            <div class="flex items-center justify-end gap-2">
+                                <form method="POST" action="{{ route('leads.status', $lead) }}">
+                                    @csrf
+                                    @method('PATCH')
+                                    <x-ui.select
+                                        :native="true"
+                                        name="status"
+                                        :value="''"
+                                        :placeholder="__('Change status…')"
+                                        :options="$statusOptions"
+                                        class="h-8 w-40 text-xs"
+                                        @change="$el.form.submit()"
+                                    />
+                                </form>
+                                <x-ui.button :href="route('leads.edit', $lead)" variant="outline" size="sm">{{ __('Edit') }}</x-ui.button>
+                            </div>
                         </x-ui.table-cell>
                     </x-ui.table-row>
                 @empty

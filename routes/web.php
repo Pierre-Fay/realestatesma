@@ -60,7 +60,9 @@ Route::middleware(['auth', 'verified', 'agent'])->group(function () {
     Route::put('/listings/{property}', [PropertyController::class, 'update'])->name('listings.update');
 
     Route::get('/leads', [LeadController::class, 'index'])->name('leads.index');
-    Route::patch('/leads/{lead}', [LeadController::class, 'update'])->name('leads.update');
+    Route::get('/leads/{lead}/edit', [LeadController::class, 'edit'])->name('leads.edit');
+    Route::put('/leads/{lead}', [LeadController::class, 'update'])->name('leads.update');
+    Route::patch('/leads/{lead}/status', [LeadController::class, 'status'])->name('leads.status');
 });
 
 Route::middleware('auth')->group(function () {
