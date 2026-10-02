@@ -53,6 +53,11 @@ later), while a property inquiry creates a lead **assigned to the property's age
 A lead can exist without an assigned agent (`agent_id` nullable) from the moment it is created. An Admin assigns the
 lead to an Agent; a lead may also be reassigned to another Agent (by an Admin or an Agent) so leads are not lost.
 
+### Admin lead oversight
+An Admin can view every lead from both creation paths, including unassigned leads, leads assigned to any Agent
+(even profiles without a login or with disabled login access), and leads in every pipeline status, including `closed`
+and `lost`. Assignment, Agent and status filters narrow the list only when selected; no leads are excluded by default.
+
 ### GDPR consent for lead collection
 A Visitor submitting a property inquiry or a general contact request must give explicit consent (checkbox) before
 their personal data is collected. The site must publish a legal notice and a privacy policy explaining data usage.
