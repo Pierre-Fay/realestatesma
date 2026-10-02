@@ -14,7 +14,18 @@
     <x-slot name="header">{{ __('All leads') }}</x-slot>
 
     <div class="flex flex-col gap-4">
+        @if (session('status') === 'lead-assignment-updated')
+            <x-ui.alert tone="success">
+                <x-lucide-circle-check />
+                <x-ui.alert-title>{{ __('Lead assignment updated.') }}</x-ui.alert-title>
+            </x-ui.alert>
+        @endif
+
         <p class="text-muted-foreground text-sm">{{ __('Review leads from contact requests and property inquiries across all agents.') }}</p>
+
+        @if ($assignableAgents->isEmpty())
+            <p class="text-muted-foreground text-sm">{{ __('No enabled agent accounts are available. Assigned leads can still be unassigned.') }}</p>
+        @endif
 
         <form method="GET" action="{{ route('admin.leads.index') }}" class="flex flex-wrap items-end gap-3">
             <div class="flex flex-col gap-2">
@@ -49,7 +60,7 @@
 
         @if ($errors->any())
             <x-ui.alert tone="danger">
-                <x-ui.alert-title>{{ __('Please check your filters.') }}</x-ui.alert-title>
+                <x-ui.alert-title>{{ __('Please check your selections.') }}</x-ui.alert-title>
                 <x-ui.alert-description>
                     <ul>
                         @foreach ($errors->all() as $error)
@@ -71,6 +82,7 @@
                     <x-ui.table-head>{{ __('Status') }}</x-ui.table-head>
                     <x-ui.table-head>{{ __('Assigned agent') }}</x-ui.table-head>
                     <x-ui.table-head>{{ __('Submitted') }}</x-ui.table-head>
+                    <x-ui.table-head>{{ __('Assignment actions') }}</x-ui.table-head>
                 </x-ui.table-row>
             </x-ui.table-header>
             <x-ui.table-body>
@@ -110,10 +122,29 @@
                             @endif
                         </x-ui.table-cell>
                         <x-ui.table-cell>{{ $lead->created_at?->format('Y-m-d H:i') ?? '—' }}</x-ui.table-cell>
+                        <x-ui.table-cell>
+                            <form method="POST" action="{{ route('admin.leads.assign', $lead) }}" class="flex flex-col gap-2">
+                                @csrf
+                                @method('PATCH')
+                                <x-ui.label for="lead-agent-{{ $lead->id }}" class="sr-only">
+                                    {{ __('Assigned agent for :name', ['name' => $lead->first_name.' '.$lead->last_name]) }}
+                                </x-ui.label>
+                                <x-ui.select :native="true" id="lead-agent-{{ $lead->id }}" name="agent_id" class="w-48">
+                                    <option value="" @selected($lead->agent_id === null)>{{ __('Unassigned') }}</option>
+                                    @if ($lead->agent && ! $assignableAgents->contains('id', $lead->agent_id))
+                                        <option value="{{ $lead->agent_id }}" selected disabled>{{ $lead->agent->name }} — {{ __('Unavailable') }}</option>
+                                    @endif
+                                    @foreach ($assignableAgents as $agent)
+                                        <option value="{{ $agent->id }}" @selected($lead->agent_id === $agent->id)>{{ $agent->name }}</option>
+                                    @endforeach
+                                </x-ui.select>
+                                <x-ui.button type="submit" variant="outline" size="sm">{{ __('Save assignment') }}</x-ui.button>
+                            </form>
+                        </x-ui.table-cell>
                     </x-ui.table-row>
                 @empty
                     <x-ui.table-row>
-                        <x-ui.table-cell colspan="8" class="text-muted-foreground py-6 text-center">{{ __('No leads found.') }}</x-ui.table-cell>
+                        <x-ui.table-cell colspan="9" class="text-muted-foreground py-6 text-center">{{ __('No leads found.') }}</x-ui.table-cell>
                     </x-ui.table-row>
                 @endforelse
             </x-ui.table-body>

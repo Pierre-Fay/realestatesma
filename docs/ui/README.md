@@ -23,6 +23,6 @@ Accessibility, Wanted changes, Out of scope.
 | [`admin-users.md`](admin-users.md) | User management | `/admin/users` |
 | [`admin-agents.md`](admin-agents.md) | Agent management | `/admin/agents` |
 | [`admin-properties.md`](admin-properties.md) | Admin property approval | `/admin/properties` |
-| [`admin-leads.md`](admin-leads.md) | Admin oversight of all leads | `/admin/leads` |
+| [`admin-leads.md`](admin-leads.md) | Admin oversight and lead assignment | `/admin/leads` |
 | [`agent-listings.md`](agent-listings.md) | Agent listing management | `/listings` |
 | [`agent-leads.md`](agent-leads.md) | Agent lead pipeline | `/leads` |

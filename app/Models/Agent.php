@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Enums\UserRole;
 use Database\Factories\AgentFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -55,6 +58,17 @@ class Agent extends Model
     public function leads(): HasMany
     {
         return $this->hasMany(Lead::class);
+    }
+
+    /**
+     * Only agents with an enabled agent-role login can receive new lead assignments.
+     */
+    #[Scope]
+    protected function eligibleForLeadAssignment(Builder $query): void
+    {
+        $query->whereHas('user', fn (Builder $users) => $users
+            ->where('role', UserRole::AGENT)
+            ->where('is_enabled', true));
     }
 
     /**
