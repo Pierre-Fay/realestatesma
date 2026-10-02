@@ -10,6 +10,7 @@ Accessibility, Wanted changes, Out of scope.
 | File | What it describes | Route |
 |---|---|---|
 | [`back-office.md`](back-office.md) | Shared authenticated shell (area overview) | — |
+| [`home.md`](home.md) | Homepage (landing) | `/` |
 | [`login.md`](login.md) | Login page | `/login` |
 | [`properties-browse.md`](properties-browse.md) | Public property browse/search | `/properties` |
 | [`property-detail.md`](property-detail.md) | Public property detail | `/properties/{slug}` |
