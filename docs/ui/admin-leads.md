@@ -16,7 +16,8 @@ Rendered inside the shared [back office shell](back-office.md).
 - GET filters: Assignment (All / Unassigned / Assigned), Agent (all profiles), Status (all pipeline statuses).
 - **Filter** applies the selected filters together; **Reset** returns to the complete list.
 - Table: Name, Contact (email + phone), Interested in, Notes, Budget (USD), Status badge, Assigned agent, Submitted, Assignment actions.
-- Notes expand using a native `details` element to make the complete message readable without JavaScript.
+- Notes expand using the shared `x-lead-notes` native `details` component, also used by the agent lead list,
+  to make the complete message readable without JavaScript.
 - Missing values use `—`; an unassigned lead has an **Unassigned** badge; a zero budget is shown as `$0`.
 - Unassigned leads first, newest first within each assignment group; ID descending breaks timestamp ties.
 - Pagination: 15 per page; selected filters are preserved in page links.
