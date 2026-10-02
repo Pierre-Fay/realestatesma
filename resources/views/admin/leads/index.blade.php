@@ -99,14 +99,7 @@
                             <span class="block max-w-56 whitespace-normal">{{ $lead->interested_in }}</span>
                         </x-ui.table-cell>
                         <x-ui.table-cell>
-                            @if ($lead->notes)
-                                <details class="max-w-64">
-                                    <summary class="cursor-pointer">{{ __('View notes') }}</summary>
-                                    <p class="text-muted-foreground whitespace-pre-wrap break-words text-sm">{{ $lead->notes }}</p>
-                                </details>
-                            @else
-                                —
-                            @endif
+                            <x-lead-notes :notes="$lead->notes" />
                         </x-ui.table-cell>
                         <x-ui.table-cell class="tabular-nums">
                             {{ $lead->budget !== null ? '$'.number_format((float) $lead->budget) : '—' }}

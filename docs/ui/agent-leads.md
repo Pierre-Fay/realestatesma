@@ -11,11 +11,16 @@ lead's interest, budget and notes. Rendered inside the back office shell (see [`
 - An agent only ever sees and edits **their own** leads (`LeadPolicy` via `agent_id`).
 
 ## List — `/leads`
-- Table: Name, Contact (email + phone), Interested in, Notes (truncated, full text on hover), Budget, Status badge, Actions.
+- Table: Name, Contact (email + phone), Interested in, Notes, Budget (USD), Status badge, Submitted, Actions.
+- Presentation matches the [admin lead list](admin-leads.md): interest text wraps instead of relying on hover;
+  **View notes** expands the full note inline using the shared `x-lead-notes` native `details` component.
+  Notes preserve line breaks and work with keyboard, touch and without JavaScript; missing notes use `—`.
+- Missing budgets use `—`; a zero budget is displayed as `$0`. Submitted timestamps use `Y-m-d H:i`.
 - Status badge colours: New (info), Contacted (neutral), Qualified (warning), Closed (success), Lost (danger).
 - **Update status**: a per-row native select that submits on change (`PATCH /leads/{lead}/status`); only **Contacted / Qualified / Closed / Lost** are offered — a lead cannot be moved back to `new`.
 - **Edit**: a per-row link to the edit page.
-- Pagination (15 per page) + success alert.
+- Status selects have explicit accessible labels; the action group wraps when space is limited.
+- Pagination (15 per page) + success alert; validation errors are displayed above the table.
 
 ## Edit — `/leads/{lead}/edit`
 - Form (`PUT /leads/{lead}`) over the **pipeline fields**:
