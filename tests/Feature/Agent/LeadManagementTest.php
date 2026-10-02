@@ -40,7 +40,7 @@ test('an agent can update the status of their lead', function () {
     $lead = Lead::factory()->create(['agent_id' => $agent->agent->id, 'status' => LeadStatus::NEW]);
 
     $this->actingAs($agent)
-        ->patch(route('leads.update', $lead), ['status' => LeadStatus::CONTACTED->value])
+        ->patch(route('leads.status', $lead), ['status' => LeadStatus::CONTACTED->value])
         ->assertRedirect(route('leads.index'));
 
     expect($lead->fresh()->status)->toBe(LeadStatus::CONTACTED);
@@ -51,7 +51,7 @@ test('an agent cannot update another agents lead', function () {
     $other = Lead::factory()->create(['status' => LeadStatus::NEW]);
 
     $this->actingAs($agent)
-        ->patch(route('leads.update', $other), ['status' => LeadStatus::CONTACTED->value])
+        ->patch(route('leads.status', $other), ['status' => LeadStatus::CONTACTED->value])
         ->assertForbidden();
 
     expect($other->fresh()->status)->toBe(LeadStatus::NEW);
@@ -62,7 +62,7 @@ test('the status must be a valid lead status', function () {
     $lead = Lead::factory()->create(['agent_id' => $agent->agent->id]);
 
     $this->actingAs($agent)
-        ->patch(route('leads.update', $lead), ['status' => 'nonsense'])
+        ->patch(route('leads.status', $lead), ['status' => 'nonsense'])
         ->assertSessionHasErrors('status');
 });
 
@@ -71,8 +71,71 @@ test('a lead cannot be moved back to new', function () {
     $lead = Lead::factory()->create(['agent_id' => $agent->agent->id, 'status' => LeadStatus::CONTACTED]);
 
     $this->actingAs($agent)
-        ->patch(route('leads.update', $lead), ['status' => LeadStatus::NEW->value])
+        ->patch(route('leads.status', $lead), ['status' => LeadStatus::NEW->value])
         ->assertSessionHasErrors('status');
 
     expect($lead->fresh()->status)->toBe(LeadStatus::CONTACTED);
+});
+
+test('an agent can edit their lead', function () {
+    $agent = leadAgent();
+    $lead = Lead::factory()->create([
+        'agent_id' => $agent->agent->id,
+        'status' => LeadStatus::QUALIFIED,
+        'interested_in' => 'Old interest',
+        'budget' => null,
+        'notes' => null,
+    ]);
+
+    $this->actingAs($agent)
+        ->put(route('leads.update', $lead), [
+            'interested_in' => 'A 4-bedroom villa in Centro',
+            'budget' => 1200000,
+            'notes' => 'Called on Monday, sending listings.',
+            'status' => LeadStatus::CLOSED->value,
+        ])
+        ->assertRedirect(route('leads.index'));
+
+    $lead->refresh();
+
+    expect($lead->interested_in)->toBe('A 4-bedroom villa in Centro')
+        ->and((float) $lead->budget)->toBe(1200000.0)
+        ->and($lead->notes)->toBe('Called on Monday, sending listings.')
+        ->and($lead->status)->toBe(LeadStatus::CLOSED);
+});
+
+test('an agent cannot edit another agents lead', function () {
+    $agent = leadAgent();
+    $other = Lead::factory()->create();
+
+    $this->actingAs($agent)
+        ->put(route('leads.update', $other), [
+            'interested_in' => 'Nope',
+            'status' => LeadStatus::CONTACTED->value,
+        ])
+        ->assertForbidden();
+});
+
+test('the edit form requires the interest field', function () {
+    $agent = leadAgent();
+    $lead = Lead::factory()->create(['agent_id' => $agent->agent->id]);
+
+    $this->actingAs($agent)
+        ->put(route('leads.update', $lead), ['interested_in' => '', 'status' => LeadStatus::CONTACTED->value])
+        ->assertSessionHasErrors('interested_in');
+});
+
+test('a lead cannot be moved back to new via the edit form', function () {
+    $agent = leadAgent();
+    $lead = Lead::factory()->create([
+        'agent_id' => $agent->agent->id,
+        'status' => LeadStatus::QUALIFIED,
+        'interested_in' => 'Something',
+    ]);
+
+    $this->actingAs($agent)
+        ->put(route('leads.update', $lead), ['interested_in' => 'Something', 'status' => LeadStatus::NEW->value])
+        ->assertSessionHasErrors('status');
+
+    expect($lead->fresh()->status)->toBe(LeadStatus::QUALIFIED);
 });
