@@ -12,6 +12,7 @@ Admin-only landing page for administration tools, rendered inside the back offic
 ## Content
 - Title and description.
 - "Manage users" button linking to user management (`/admin/users`, AUTH-04).
+- "Manage leads" button linking to all contact requests and property inquiries (`/admin/leads`, LEAD-05).
 
 ## Wanted changes
 > Describe the desired UI changes here.

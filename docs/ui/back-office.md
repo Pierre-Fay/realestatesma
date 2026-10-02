@@ -19,6 +19,8 @@ inside this shell.
 - **Left sidebar** (inset variant): brand (top), navigation (middle), user menu (bottom).
 - **Header bar**: sidebar toggle, vertical separator, page title.
 - **Main content**: the current page's slot.
+- Shared paginated lists use a navigation landmark labelled **Pagination navigation**, avoiding a collision
+  with Laravel's `pagination` translation group.
 
 ## Sidebar
 
@@ -35,6 +37,7 @@ inside this shell.
 | Users | `/admin/users` | admin only |
 | Agents | `/admin/agents` | admin only |
 | Properties | `/admin/properties` | admin only |
+| All leads | `/admin/leads` | admin only |
 
 ### User menu (footer)
 - Avatar (initials), name, email.
@@ -52,6 +55,7 @@ inside this shell.
 - Property approval → [`admin-properties.md`](admin-properties.md)
 - Agent listings → [`agent-listings.md`](agent-listings.md)
 - Leads → [`agent-leads.md`](agent-leads.md)
+- All leads → [`admin-leads.md`](admin-leads.md)
 - Profile → Breeze default (not yet documented)
 
 ## Wanted changes

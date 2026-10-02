@@ -29,10 +29,11 @@ Submitted to `POST /contact` (rate-limited `throttle:5,1`):
 - The consent label links to the **privacy policy** (`/privacy`).
 - Reached from the public nav ("Contact").
 - Creates an **unassigned** lead; a property inquiry (on a property detail page) creates a lead **assigned to that property's agent** instead.
+- Admins can review contact requests in **All leads** (`/admin/leads`, LEAD-05); assignment controls are LEAD-04.
 
 ## Wanted changes
 > Describe the desired UI changes here.
 -
 
 ## Out of scope
-- Lead assignment/oversight (LEAD-04/05), a visitor message field, newsletter.
+- Lead assignment controls (LEAD-04), a visitor message field, newsletter.
