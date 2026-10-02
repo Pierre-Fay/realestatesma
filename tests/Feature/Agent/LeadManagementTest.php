@@ -62,8 +62,27 @@ test('the status must be a valid lead status', function () {
     $lead = Lead::factory()->create(['agent_id' => $agent->agent->id]);
 
     $this->actingAs($agent)
+        ->followingRedirects()
+        ->from(route('leads.index'))
         ->patch(route('leads.status', $lead), ['status' => 'nonsense'])
-        ->assertSessionHasErrors('status');
+        ->assertSee('The selected status is invalid.');
+});
+
+test('a zero budget is displayed in the agent lead list', function () {
+    $agent = leadAgent();
+    Lead::factory()->create(['agent_id' => $agent->agent->id, 'budget' => 0]);
+
+    $this->actingAs($agent)->get(route('leads.index'))->assertSee('$0');
+});
+
+test('full lead notes are safely rendered in the agent lead list', function () {
+    $agent = leadAgent();
+    $notes = "Called on Monday.\n<script>alert('unsafe')</script>\nFollow up next week.";
+    Lead::factory()->create(['agent_id' => $agent->agent->id, 'notes' => $notes]);
+
+    $this->actingAs($agent)->get(route('leads.index'))
+        ->assertSee($notes)
+        ->assertDontSee("<script>alert('unsafe')</script>", false);
 });
 
 test('a lead cannot be moved back to new', function () {
