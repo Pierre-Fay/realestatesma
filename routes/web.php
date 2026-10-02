@@ -6,14 +6,13 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Agent\LeadController;
 use App\Http\Controllers\Agent\PropertyController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PropertyBrowseController;
 use App\Http\Controllers\PropertyInquiryController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/properties', [PropertyBrowseController::class, 'index'])->name('properties.index');
 Route::get('/properties/{property:slug}', [PropertyBrowseController::class, 'show'])->name('properties.show');
