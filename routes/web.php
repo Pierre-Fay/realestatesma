@@ -47,6 +47,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::post('/admin/agents', [AgentController::class, 'store'])->name('admin.agents.store');
 
     Route::get('/admin/leads', [AdminLeadController::class, 'index'])->name('admin.leads.index');
+    Route::patch('/admin/leads/{lead}/assignment', [AdminLeadController::class, 'assign'])->name('admin.leads.assign');
 
     Route::get('/admin/properties', [AdminPropertyController::class, 'index'])->name('admin.properties.index');
     Route::patch('/admin/properties/{property}/approve', [AdminPropertyController::class, 'approve'])->name('admin.properties.approve');
@@ -65,6 +66,7 @@ Route::middleware(['auth', 'verified', 'agent'])->group(function () {
     Route::get('/leads/{lead}/edit', [LeadController::class, 'edit'])->name('leads.edit');
     Route::put('/leads/{lead}', [LeadController::class, 'update'])->name('leads.update');
     Route::patch('/leads/{lead}/status', [LeadController::class, 'status'])->name('leads.status');
+    Route::patch('/leads/{lead}/assignment', [LeadController::class, 'assign'])->name('leads.assign');
 });
 
 Route::middleware('auth')->group(function () {
