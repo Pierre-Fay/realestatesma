@@ -17,6 +17,9 @@ Inside domain can be found 3 files :
 ### Functional
 Inside functional is a complete functional analysis file, with planning for agile tickets, with user stories, MoSCoW, and git branch naming
 
+### Workflow
+Inside workflow can be found the project's development process — currently the git branching, commit and merge conventions (see [`workflow/git.md`](workflow/git.md)).
+
 ### Ui
 Inside ui can be found textual descriptions of the **back office** (the shared authenticated shell)
 and of each individual page's wireframe (to be implemented). See `docs/ui/README.md` for the index.
