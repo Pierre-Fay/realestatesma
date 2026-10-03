@@ -118,7 +118,7 @@
                             <x-ui.dropdown-menu-content class="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg" side="right" align="end" :side-offset="4">
                                 <x-ui.dropdown-menu-item :href="route('profile.edit')">
                                     <x-lucide-user />
-                                    {{ __('Profile') }}
+                                        {{ __('Account settings') }}
                                 </x-ui.dropdown-menu-item>
                                 <x-ui.dropdown-menu-separator />
                                 <form method="POST" action="{{ route('logout') }}">
