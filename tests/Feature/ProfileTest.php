@@ -83,3 +83,41 @@ test('correct password must be provided to delete account', function () {
 
     $this->assertNotNull($user->fresh());
 });
+
+test('account validation errors and submitted email are visible after redirect', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->followingRedirects()->from(route('profile.edit'))
+        ->patch(route('profile.update'), ['name' => '', 'email' => 'invalid-email'])
+        ->assertSee('The name field is required.')
+        ->assertSee('The email field must be a valid email address.')
+        ->assertSee('value="invalid-email"', false);
+
+    $this->assertDatabaseHas('users', ['id' => $user->id, 'name' => $user->name, 'email' => $user->email]);
+});
+
+test('failed account deletion reopens the confirmation with its field error', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->followingRedirects()->from(route('profile.edit'))
+        ->delete(route('profile.destroy'), ['password' => 'wrong-password'])
+        ->assertSee('The password is incorrect.')
+        ->assertSee('id="delete-account-password-error"', false)
+        ->assertSee('x-data="{ open: true }"', false)
+        ->assertDontSee('id="new-password-error"', false)
+        ->assertDontSee('value="wrong-password"', false);
+
+    $this->assertModelExists($user);
+    $this->assertAuthenticatedAs($user);
+});
+
+test('profile success feedback is visible after saving account information', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->followingRedirects()->from(route('profile.edit'))
+        ->patch(route('profile.update'), ['name' => 'Updated Name', 'email' => $user->email])
+        ->assertSee('Account information saved.')
+        ->assertSee('value="Updated Name"', false);
+
+    $this->assertDatabaseHas('users', ['id' => $user->id, 'name' => 'Updated Name']);
+});

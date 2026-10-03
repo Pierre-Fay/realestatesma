@@ -38,3 +38,34 @@ test('correct password must be provided to update password', function () {
         ->assertSessionHasErrorsIn('updatePassword', 'current_password')
         ->assertRedirect('/profile');
 });
+
+test('password errors are visible in the password form without reopening account deletion', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->followingRedirects()->from(route('profile.edit'))
+        ->put(route('password.update'), [
+            'current_password' => 'wrong-password',
+            'password' => 'new-password',
+            'password_confirmation' => 'new-password',
+        ])
+        ->assertSee('The password is incorrect.')
+        ->assertSee('id="current-password-error"', false)
+        ->assertDontSee('id="delete-account-password-error"', false)
+        ->assertSee('x-data="{ open: false }"', false)
+        ->assertDontSee('value="wrong-password"', false);
+
+    expect(Hash::check('password', $user->fresh()->password))->toBeTrue();
+});
+
+test('password success feedback is visible after a password change', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->followingRedirects()->from(route('profile.edit'))
+        ->put(route('password.update'), [
+            'current_password' => 'password',
+            'password' => 'new-password',
+            'password_confirmation' => 'new-password',
+        ])->assertSee('Password updated.');
+
+    expect(Hash::check('new-password', $user->fresh()->password))->toBeTrue();
+});
