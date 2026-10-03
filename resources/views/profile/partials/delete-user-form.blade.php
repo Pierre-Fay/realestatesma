@@ -20,6 +20,12 @@
                     @csrf
                     @method('DELETE')
 
+                    @if ($errors->userDeletion->has('delete'))
+                        <x-ui.alert tone="warning">
+                            <x-ui.alert-title>{{ $errors->userDeletion->first('delete') }}</x-ui.alert-title>
+                        </x-ui.alert>
+                    @endif
+
                     <x-ui.field>
                         <x-ui.field-label for="delete-account-password">{{ __('Current password') }}</x-ui.field-label>
                         <x-ui.input

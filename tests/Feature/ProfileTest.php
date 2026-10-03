@@ -84,6 +84,24 @@ test('correct password must be provided to delete account', function () {
     $this->assertNotNull($user->fresh());
 });
 
+test('administrators cannot delete their own account', function () {
+    $admin = User::factory()->admin()->create();
+
+    $response = $this
+        ->actingAs($admin)
+        ->from('/profile')
+        ->delete('/profile', [
+            'password' => 'password',
+        ]);
+
+    $response
+        ->assertSessionHasErrorsIn('userDeletion', 'delete')
+        ->assertRedirect('/profile');
+
+    $this->assertModelExists($admin);
+    $this->assertAuthenticatedAs($admin);
+});
+
 test('account validation errors and submitted email are visible after redirect', function () {
     $user = User::factory()->create();
 
