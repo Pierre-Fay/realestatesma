@@ -43,7 +43,8 @@ test('guests can submit a property inquiry as a lead assigned to the agent', fun
         ->and($lead->interested_in)->toBe('Casa del Sol')
         ->and($lead->notes)->toBe('I would like to visit this property.')
         ->and($lead->status)->toBe(LeadStatus::NEW)
-        ->and($lead->agent_id)->toBe($agent->id);
+        ->and($lead->agent_id)->toBe($agent->id)
+        ->and($lead->consented_at)->not->toBeNull();
 });
 
 test('a property inquiry with no agent leaves the lead unassigned', function () {
