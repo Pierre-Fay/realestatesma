@@ -35,7 +35,8 @@ test('guests can submit a contact request', function () {
         ->and($lead->email)->toBe('jane@example.com')
         ->and($lead->interested_in)->toBe('A 3-bedroom villa in Centro')
         ->and($lead->status)->toBe(LeadStatus::NEW)
-        ->and($lead->agent_id)->toBeNull();
+        ->and($lead->agent_id)->toBeNull()
+        ->and($lead->consented_at)->not->toBeNull();
 });
 
 test('the contact request is validated', function () {
