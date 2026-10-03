@@ -37,6 +37,7 @@ This is account information, not the Agent's public profile planned in AGT-03.
 - The dialog initially opens when deletion validation fails and focuses the password input when opened.
 - Uses the shared alert-dialog focus trap, Escape handling and scroll locking.
 - Existing deletion success behavior is preserved: delete the account, log out, invalidate the session, and redirect home.
+- In iteration 1, an Admin cannot delete their own account: the action is blocked and a validation message is shown.
 
 ## States and accessibility
 - Validation errors are displayed next to their own fields; input invalid state and error associations are provided.
