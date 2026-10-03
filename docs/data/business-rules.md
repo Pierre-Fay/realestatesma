@@ -19,6 +19,13 @@ An Admin can enable or disable a User's login access without deleting or unpubli
 an Admin cannot disable their own account, nor disable the last remaining active Admin. Disabling a user immediately
 revokes their active sessions and remember-me token.
 
+### Account deletion
+A signed-in User may delete their own login account (from the account settings page). In iteration 1, an **Admin
+cannot delete their own account** — a simple guard that prevents removing the last Admin and is accepted as an
+iteration-1 quirk. Deleting an Agent's login keeps the public Agent profile in place (attribution preserved, see
+AGT-05) but clears `agent_id` on their leads, which become unassigned; this consequence is documented and will be
+revisited with AGT-05.
+
 ### Property approval workflow
 A property is only visible to the public after an Admin reviews and approves it. Until then it is inactive
 (`is_active = false` by default). An Agent creates/edits a listing; an Admin approves it before it goes live.
@@ -38,10 +45,10 @@ sold). An Agent marks a property as sold (with a sold date), which also takes it
 feature a property (`is_featured`).
 
 ### Lead lifecycle
-A lead moves through a fixed status pipeline: `new -> contacted -> qualified -> closed`, or it ends `lost` whenever the
-opportunity fails — no answer to contact attempts, criteria mismatch, or lost deal. An Agent records a successful
-contact (`contacted`), qualifies the lead if budget and interest align (`qualified`), and ends it `closed` (deal won)
-or `lost`.
+A lead moves through a status pipeline: `new -> contacted -> qualified -> closed`, or it ends `lost` whenever the
+opportunity fails — no answer to contact attempts, criteria mismatch, or lost deal. The pipeline describes the
+intended progression and is **not enforced as a strict sequence**: an Agent may move a lead to any other status to
+correct a mistake. The only transition that is forbidden is moving a lead back to `new` once it has left that state.
 
 ### Lead creation
 A lead is created through two paths: the general contact page creates an **unassigned** lead (an Admin assigns it
@@ -70,6 +77,7 @@ and `lost`. Assignment, Agent and status filters narrow the list only when selec
 ### GDPR consent for lead collection
 A Visitor submitting a property inquiry or a general contact request must give explicit consent (checkbox) before
 their personal data is collected. The site must publish a legal notice and a privacy policy explaining data usage.
+Consent is **recorded with a timestamp** (`consented_at`) as proof that explicit consent was given.
 
 ### Agent account creation
 Creating an Agent account atomically creates both the login (User with role `agent`) and the linked public Agent
