@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'status',
     'notes',
     'agent_id',
+    'consented_at',
 ])]
 class Lead extends Model
 {
@@ -35,6 +36,7 @@ class Lead extends Model
         return [
             'budget' => 'decimal:2',
             'status' => LeadStatus::class,
+            'consented_at' => 'datetime',
         ];
     }
 

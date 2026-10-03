@@ -31,7 +31,10 @@ class ContactController extends Controller
 
         Lead::create($request->safe()->only([
             'first_name', 'last_name', 'email', 'phone', 'interested_in', 'budget',
-        ]) + ['status' => LeadStatus::NEW]);
+        ]) + [
+            'status' => LeadStatus::NEW,
+            'consented_at' => now(),
+        ]);
 
         return Redirect::route('contact')->with('status', 'lead-sent');
     }

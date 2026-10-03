@@ -35,6 +35,7 @@ class PropertyInquiryController extends Controller
             'notes' => $request->validated('message'),
             'status' => LeadStatus::NEW,
             'agent_id' => $agent?->id,
+            'consented_at' => now(),
         ]);
 
         return Redirect::route('properties.show', $property)->with('status', 'inquiry-sent');
