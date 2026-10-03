@@ -48,6 +48,11 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
+        if ($user->isAdmin()) {
+            return Redirect::route('profile.edit')
+                ->withErrors(['delete' => __('An administrator account cannot be deleted.')], 'userDeletion');
+        }
+
         Auth::logout();
 
         $user->delete();
