@@ -19,6 +19,7 @@ Accessibility, Wanted changes, Out of scope.
 | [`legal.md`](legal.md) | Legal notice | `/legal` |
 | [`privacy.md`](privacy.md) | Privacy policy | `/privacy` |
 | [`dashboard.md`](dashboard.md) | Dashboard (back office home) | `/dashboard` |
+| [`profile.md`](profile.md) | Login account settings | `/profile` |
 | [`admin.md`](admin.md) | Administration | `/admin` |
 | [`admin-users.md`](admin-users.md) | User management | `/admin/users` |
 | [`admin-agents.md`](admin-agents.md) | Agent management | `/admin/agents` |

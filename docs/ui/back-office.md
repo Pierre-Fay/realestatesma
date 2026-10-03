@@ -41,10 +41,11 @@ inside this shell.
 
 ### User menu (footer)
 - Avatar (initials), name, email.
-- Dropdown → Profile (`/profile`), Log out.
+- Dropdown → Account settings (`/profile`), Log out.
 
 ## Access rules
-- The whole shell requires authentication + verified email; guests are redirected to `/login`.
+- The shell is used by authenticated pages; guests are redirected to `/login`. Dashboard and role workspaces also
+  use the existing `verified` middleware; account settings uses `auth` only, so users can manage their login email.
 - Admin-only navigation items are **hidden** for agents and **enforced server-side** (middleware + policies), never by hiding UI alone.
 
 ## Pages rendered in the shell
@@ -56,7 +57,7 @@ inside this shell.
 - Agent listings → [`agent-listings.md`](agent-listings.md)
 - Leads → [`agent-leads.md`](agent-leads.md)
 - All leads → [`admin-leads.md`](admin-leads.md)
-- Profile → Breeze default (not yet documented)
+- Account settings → [`profile.md`](profile.md)
 
 ## Wanted changes
 > Describe the desired UI changes here.

@@ -1,66 +1,66 @@
-<section>
-    <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('Update Password') }}</h2>
+<x-ui.card variant="sectioned">
+    <x-ui.card-header>
+        <x-ui.card-title><h3>{{ __('Update password') }}</h3></x-ui.card-title>
+        <x-ui.card-description>{{ __('Ensure your account is using a long, random password to stay secure.') }}</x-ui.card-description>
+    </x-ui.card-header>
 
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __('Ensure your account is using a long, random password to stay secure.') }}
-        </p>
-    </header>
+    <x-ui.card-content class="flex flex-col gap-4">
+        @if (session('status') === 'password-updated')
+            <x-ui.alert tone="success">
+                <x-lucide-circle-check />
+                <x-ui.alert-title>{{ __('Password updated.') }}</x-ui.alert-title>
+            </x-ui.alert>
+        @endif
 
-    <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6">
-        @csrf
-        @method('put')
+        <form method="POST" action="{{ route('password.update') }}" class="flex flex-col gap-4">
+            @csrf
+            @method('PUT')
 
-        <div>
-            <x-input-label for="update_password_current_password" :value="__('Current Password')" />
-            <x-text-input
-                id="update_password_current_password"
-                name="current_password"
-                type="password"
-                class="mt-1 block w-full"
-                autocomplete="current-password"
-            />
-            <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2" />
-        </div>
+            <x-ui.field>
+                <x-ui.field-label for="update_password_current_password">{{ __('Current password') }}</x-ui.field-label>
+                <x-ui.input
+                    id="update_password_current_password"
+                    name="current_password"
+                    type="password"
+                    required
+                    autocomplete="current-password"
+                    :aria-invalid="$errors->updatePassword->has('current_password') ? 'true' : 'false'"
+                    :aria-describedby="$errors->updatePassword->has('current_password') ? 'current-password-error' : null"
+                />
+                <x-ui.field-error id="current-password-error" :messages="$errors->updatePassword->get('current_password')" />
+            </x-ui.field>
 
-        <div>
-            <x-input-label for="update_password_password" :value="__('New Password')" />
-            <x-text-input
-                id="update_password_password"
-                name="password"
-                type="password"
-                class="mt-1 block w-full"
-                autocomplete="new-password"
-            />
-            <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2" />
-        </div>
+            <x-ui.field>
+                <x-ui.field-label for="update_password_password">{{ __('New password') }}</x-ui.field-label>
+                <x-ui.input
+                    id="update_password_password"
+                    name="password"
+                    type="password"
+                    required
+                    autocomplete="new-password"
+                    :aria-invalid="$errors->updatePassword->has('password') ? 'true' : 'false'"
+                    :aria-describedby="$errors->updatePassword->has('password') ? 'new-password-error' : null"
+                />
+                <x-ui.field-error id="new-password-error" :messages="$errors->updatePassword->get('password')" />
+            </x-ui.field>
 
-        <div>
-            <x-input-label for="update_password_password_confirmation" :value="__('Confirm Password')" />
-            <x-text-input
-                id="update_password_password_confirmation"
-                name="password_confirmation"
-                type="password"
-                class="mt-1 block w-full"
-                autocomplete="new-password"
-            />
-            <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" />
-        </div>
+            <x-ui.field>
+                <x-ui.field-label for="update_password_password_confirmation">{{ __('Confirm password') }}</x-ui.field-label>
+                <x-ui.input
+                    id="update_password_password_confirmation"
+                    name="password_confirmation"
+                    type="password"
+                    required
+                    autocomplete="new-password"
+                    :aria-invalid="$errors->updatePassword->has('password_confirmation') ? 'true' : 'false'"
+                    :aria-describedby="$errors->updatePassword->has('password_confirmation') ? 'password-confirmation-error' : null"
+                />
+                <x-ui.field-error id="password-confirmation-error" :messages="$errors->updatePassword->get('password_confirmation')" />
+            </x-ui.field>
 
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
-
-            @if (session('status') === 'password-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => (show = false), 2000)"
-                    class="text-sm text-gray-600 dark:text-gray-400"
-                >
-                    {{ __('Saved.') }}
-                </p>
-            @endif
-        </div>
-    </form>
-</section>
+            <div>
+                <x-ui.button type="submit">{{ __('Update password') }}</x-ui.button>
+            </div>
+        </form>
+    </x-ui.card-content>
+</x-ui.card>
