@@ -31,10 +31,20 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
-            'role' => UserRole::AGENT,
             'photo' => null,
             'is_enabled' => true,
         ];
+    }
+
+    /**
+     * Set the role directly: it is not mass-assignable, so the factory assigns it
+     * on the model instance rather than through the fillable attributes.
+     */
+    public function configure(): static
+    {
+        return $this->afterMaking(function (User $user): void {
+            $user->role ??= UserRole::AGENT;
+        });
     }
 
     /**
@@ -52,9 +62,9 @@ class UserFactory extends Factory
      */
     public function admin(): static
     {
-        return $this->state(fn (array $attributes) => [
-            'role' => UserRole::ADMIN,
-        ]);
+        return $this->afterMaking(function (User $user): void {
+            $user->role = UserRole::ADMIN;
+        });
     }
 
     /**
@@ -62,9 +72,9 @@ class UserFactory extends Factory
      */
     public function agent(): static
     {
-        return $this->state(fn (array $attributes) => [
-            'role' => UserRole::AGENT,
-        ]);
+        return $this->afterMaking(function (User $user): void {
+            $user->role = UserRole::AGENT;
+        });
     }
 
     /**
