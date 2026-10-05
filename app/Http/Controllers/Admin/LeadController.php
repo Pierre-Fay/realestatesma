@@ -35,6 +35,8 @@ class LeadController extends Controller
             ->when(($filters['assignment'] ?? null) === 'unassigned', fn (Builder $query) => $query->whereNull('agent_id'))
             ->when($filters['agent_id'] ?? null, fn (Builder $query, string $agentId) => $query->where('agent_id', $agentId))
             ->when($filters['status'] ?? null, fn (Builder $query, string $status) => $query->where('status', $status))
+            // Unassigned leads first: `agent_id IS NOT NULL` evaluates to 0 (null) or 1,
+            // so ascending order surfaces unassigned leads across both MySQL and SQLite.
             ->orderByRaw('agent_id IS NOT NULL')
             ->latest()
             ->orderByDesc('id')
