@@ -3,7 +3,6 @@
 
     $type = $property->categories->firstWhere('group_type', \App\Enums\CategoryGroupType::PROPERTY_TYPE);
     $area = $property->categories->firstWhere('group_type', \App\Enums\CategoryGroupType::PROPERTY_AREA);
-    $status = $property->categories->firstWhere('group_type', \App\Enums\CategoryGroupType::PROPERTY_STATUS);
     $features = $property->categories->where('group_type', \App\Enums\CategoryGroupType::PROPERTY_FEATURE);
     $labels = $property->categories->where('group_type', \App\Enums\CategoryGroupType::PROPERTY_LABEL);
 
@@ -104,11 +103,10 @@
                     <p class="text-muted-foreground">
                         {{ $property->address }}@if ($property->address), @endif{{ $property->city }}, {{ $property->state }}
                     </p>
-                    @if ($type || $area || $status || $labels->isNotEmpty())
+                    @if ($type || $area || $labels->isNotEmpty())
                         <div class="flex flex-wrap gap-1">
                             @if ($type)<x-ui.badge variant="secondary">{{ $type->name }}</x-ui.badge>@endif
                             @if ($area)<x-ui.badge variant="outline">{{ $area->name }}</x-ui.badge>@endif
-                            @if ($status)<x-ui.badge tone="info">{{ $status->name }}</x-ui.badge>@endif
                             @foreach ($labels as $label)<x-ui.badge tone="success">{{ $label->name }}</x-ui.badge>@endforeach
                         </div>
                     @endif
