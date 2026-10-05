@@ -15,7 +15,7 @@ class UpdateLeadAssignmentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()?->can('assign', $this->route('lead')) ?? false;
+        return true;
     }
 
     /**
@@ -28,7 +28,6 @@ class UpdateLeadAssignmentRequest extends FormRequest
         return [
             'agent_id' => [
                 'present',
-                Rule::requiredIf(! $this->user()->isAdmin()),
                 'nullable',
                 'integer',
                 Rule::exists(Agent::class, 'id'),
@@ -49,10 +48,6 @@ class UpdateLeadAssignmentRequest extends FormRequest
 
                 if (! Agent::query()->eligibleForLeadAssignment()->whereKey($this->integer('agent_id'))->exists()) {
                     $validator->errors()->add('agent_id', __('Select an agent with an enabled agent account.'));
-                }
-
-                if (! $this->user()->isAdmin() && $this->integer('agent_id') === $this->route('lead')->agent_id) {
-                    $validator->errors()->add('agent_id', __('Select another agent to reassign this lead.'));
                 }
             },
         ];

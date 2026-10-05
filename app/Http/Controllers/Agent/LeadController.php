@@ -6,8 +6,6 @@ use App\Enums\LeadStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Agent\UpdateLeadRequest;
 use App\Http\Requests\Agent\UpdateLeadStatusRequest;
-use App\Http\Requests\UpdateLeadAssignmentRequest;
-use App\Models\Agent;
 use App\Models\Lead;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
@@ -56,10 +54,6 @@ class LeadController extends Controller
         return view('agent.leads.edit', [
             'lead' => $lead,
             'statusOptions' => $statusOptions,
-            'assignableAgents' => Agent::query()->eligibleForLeadAssignment()
-                ->whereKeyNot($lead->agent_id)
-                ->orderBy('name')
-                ->get(['id', 'name']),
         ]);
     }
 
@@ -85,15 +79,5 @@ class LeadController extends Controller
         $lead->update(['status' => $request->validated('status')]);
 
         return Redirect::route('leads.index')->with('status', 'lead-updated');
-    }
-
-    /**
-     * Transfer one of the agent's leads to another enabled agent account.
-     */
-    public function assign(UpdateLeadAssignmentRequest $request, Lead $lead): RedirectResponse
-    {
-        $lead->update($request->safe()->only(['agent_id']));
-
-        return Redirect::route('leads.index')->with('status', 'lead-reassigned');
     }
 }

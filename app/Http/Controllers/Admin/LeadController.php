@@ -54,6 +54,8 @@ class LeadController extends Controller
      */
     public function assign(UpdateLeadAssignmentRequest $request, Lead $lead): RedirectResponse
     {
+        $this->authorize('assign', $lead);
+
         $lead->update($request->safe()->only(['agent_id']));
 
         return Redirect::route('admin.leads.index')->with('status', 'lead-assignment-updated');

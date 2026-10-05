@@ -26,10 +26,10 @@ class LeadPolicy
     }
 
     /**
-     * Admins may manage any assignment; agents may reassign only their own leads.
+     * Only an admin may assign, reassign, or unassign a lead.
      */
     public function assign(User $user, Lead $lead): bool
     {
-        return $user->isAdmin() || ($user->isAgent() && $this->update($user, $lead));
+        return $user->isAdmin();
     }
 }
