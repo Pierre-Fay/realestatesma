@@ -8,11 +8,11 @@ use App\Models\User;
 class PropertyPolicy
 {
     /**
-     * An agent may browse their own listings.
+     * Admins may browse every property for approval; agents may browse their own listings.
      */
     public function viewAny(User $user): bool
     {
-        return $user->agent !== null;
+        return $user->isAdmin() || $user->agent !== null;
     }
 
     /**
