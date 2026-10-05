@@ -6,7 +6,7 @@ use App\Models\Lead;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 
-test('the assignment policy permits admins and only the owning agent', function (bool $admin, bool $hasProfile, ?int $ownerId, bool $allowed) {
+test('only admins can assign, reassign, or unassign a lead', function (bool $admin, bool $hasProfile, ?int $ownerId, bool $allowed) {
     $user = $admin ? User::factory()->admin()->make() : User::factory()->make();
     $user->setRelation('agent', $hasProfile ? Agent::factory()->make(['id' => 1]) : null);
     $lead = Lead::factory()->make(['agent_id' => $ownerId]);
@@ -15,19 +15,28 @@ test('the assignment policy permits admins and only the owning agent', function 
 })->with([
     'admin can assign unassigned lead' => [true, false, null, true],
     'admin can reassign any owner' => [true, false, 2, true],
-    'owning agent can reassign' => [false, true, 1, true],
+    'owning agent cannot reassign' => [false, true, 1, false],
     'agent cannot reassign another owners lead' => [false, true, 2, false],
     'agent cannot claim unassigned lead' => [false, true, null, false],
     'agent without profile cannot reassign' => [false, false, 1, false],
 ]);
 
-test('guests must sign in before changing a lead assignment', function (string $routeName) {
+test('guests must sign in before changing a lead assignment', function () {
     $lead = Lead::factory()->create(['agent_id' => null]);
 
-    $this->patch(route($routeName, $lead), ['agent_id' => null])->assertRedirect(route('login'));
+    $this->patch(route('admin.leads.assign', $lead), ['agent_id' => null])->assertRedirect(route('login'));
 
     $this->assertDatabaseHas('leads', ['id' => $lead->id, 'agent_id' => null]);
-})->with(['admin.leads.assign', 'leads.assign']);
+});
+
+test('the agent reassignment endpoint no longer exists', function () {
+    $agent = Agent::factory()->withUser()->create();
+    $lead = Lead::factory()->for($agent)->create();
+
+    $this->actingAs($agent->user)
+        ->patch("/leads/{$lead->id}/assignment", ['agent_id' => $agent->id])
+        ->assertNotFound();
+});
 
 test('agents cannot use the admin assignment endpoint', function () {
     $agent = Agent::factory()->withUser()->create();
@@ -108,7 +117,6 @@ test('admins can unassign a lead and its former agent loses access', function ()
     $this->actingAs($agent->user)->get(route('leads.index'))->assertDontSee($lead->email);
     $this->get(route('leads.edit', $lead))->assertForbidden();
     $this->patch(route('leads.status', $lead), ['status' => 'closed'])->assertForbidden();
-    $this->patch(route('leads.assign', $lead), ['agent_id' => $agent->id])->assertForbidden();
 });
 
 test('admins can recover leads assigned to disabled accounts', function () {
@@ -200,114 +208,6 @@ test('admins can unassign existing leads when no enabled agent accounts are avai
         ->assertRedirect(route('admin.leads.index'));
 
     $this->assertDatabaseHas('leads', ['id' => $lead->id, 'agent_id' => null]);
-});
-
-test('agents can reassign their own leads and access transfers to the new owner', function () {
-    $original = Agent::factory()->withUser()->create();
-    $replacement = Agent::factory()->withUser()->create();
-    $lead = Lead::factory()->qualified()->for($original)->create([
-        'interested_in' => 'Centro villa', 'notes' => 'Keep these notes.', 'budget' => 750000,
-    ]);
-
-    $this->actingAs($original->user)->patch(route('leads.assign', $lead), [
-        'agent_id' => $replacement->id, 'status' => 'new', 'notes' => 'Unexpected overwrite',
-    ])
-        ->assertRedirect(route('leads.index'))
-        ->assertSessionHas('status', 'lead-reassigned');
-
-    $this->assertDatabaseHas('leads', [
-        'id' => $lead->id, 'agent_id' => $replacement->id, 'status' => 'qualified',
-        'interested_in' => 'Centro villa', 'notes' => 'Keep these notes.', 'budget' => 750000,
-    ]);
-    $this->get(route('leads.index'))->assertDontSee($lead->email);
-    $this->get(route('leads.edit', $lead))->assertForbidden();
-    $this->put(route('leads.update', $lead), ['interested_in' => 'Nope', 'status' => 'closed'])->assertForbidden();
-    $this->patch(route('leads.status', $lead), ['status' => 'closed'])->assertForbidden();
-    $this->actingAs($replacement->user)->get(route('leads.index'))->assertSee($lead->email);
-    $this->get(route('leads.edit', $lead))->assertSee('Reassign lead');
-    $this->patch(route('leads.status', $lead), ['status' => 'closed'])->assertRedirect(route('leads.index'));
-    $this->assertDatabaseHas('leads', ['id' => $lead->id, 'agent_id' => $replacement->id, 'status' => 'closed']);
-});
-
-test('agents cannot reassign another agents lead or claim an unassigned lead', function (bool $unassigned) {
-    $agent = Agent::factory()->withUser()->create();
-    $lead = $unassigned
-        ? Lead::factory()->create(['agent_id' => null])
-        : Lead::factory()->create();
-
-    $this->actingAs($agent->user)->patch(route('leads.assign', $lead), ['agent_id' => $agent->id])
-        ->assertForbidden();
-
-    $this->assertDatabaseHas('leads', ['id' => $lead->id, 'agent_id' => $lead->agent_id]);
-})->with(['another owner' => false, 'unassigned' => true]);
-
-test('agents cannot unassign their own leads', function () {
-    $agent = Agent::factory()->withUser()->create();
-    $lead = Lead::factory()->for($agent)->create();
-
-    $this->actingAs($agent->user)->patch(route('leads.assign', $lead), ['agent_id' => null])
-        ->assertInvalid(['agent_id' => 'The agent id field is required.']);
-
-    $this->assertDatabaseHas('leads', ['id' => $lead->id, 'agent_id' => $agent->id]);
-});
-
-test('agents must choose another agent for reassignment', function () {
-    $agent = Agent::factory()->withUser()->create();
-    $lead = Lead::factory()->for($agent)->create();
-
-    $this->actingAs($agent->user)->patch(route('leads.assign', $lead), ['agent_id' => $agent->id])
-        ->assertInvalid(['agent_id' => 'Select another agent to reassign this lead.']);
-
-    $this->assertDatabaseHas('leads', ['id' => $lead->id, 'agent_id' => $agent->id]);
-});
-
-test('agents cannot transfer a lead to a disabled account', function () {
-    $agent = Agent::factory()->withUser()->create();
-    $disabled = Agent::factory()->for(User::factory()->disabled())->create();
-    $lead = Lead::factory()->for($agent)->create();
-
-    $this->actingAs($agent->user)->patch(route('leads.assign', $lead), ['agent_id' => $disabled->id])
-        ->assertInvalid(['agent_id' => 'Select an agent with an enabled agent account.']);
-
-    $this->assertDatabaseHas('leads', ['id' => $lead->id, 'agent_id' => $agent->id]);
-});
-
-test('agents without a profile cannot change assignments', function () {
-    $user = User::factory()->create();
-    $lead = Lead::factory()->create(['agent_id' => null]);
-
-    $this->actingAs($user)->patch(route('leads.assign', $lead), ['agent_id' => null])->assertForbidden();
-
-    $this->assertDatabaseHas('leads', ['id' => $lead->id, 'agent_id' => null]);
-});
-
-test('admins cannot use the agent reassignment endpoint', function () {
-    $admin = User::factory()->admin()->create();
-    $lead = Lead::factory()->create();
-
-    $this->actingAs($admin)->patch(route('leads.assign', $lead), ['agent_id' => null])->assertForbidden();
-
-    $this->assertDatabaseHas('leads', ['id' => $lead->id, 'agent_id' => $lead->agent_id]);
-});
-
-test('the agent edit form offers only other eligible agents for reassignment', function () {
-    $owner = Agent::factory()->withUser()->create();
-    $target = Agent::factory()->withUser()->create();
-    $lead = Lead::factory()->for($owner)->create();
-
-    $this->actingAs($owner->user)->get(route('leads.edit', $lead))
-        ->assertSee(route('leads.assign', $lead))
-        ->assertSee($target->name)
-        ->assertViewHas('assignableAgents', fn (Collection $agents): bool => $agents->modelKeys() === [$target->id]);
-});
-
-test('the agent edit form explains when no other agent can receive the lead', function () {
-    $owner = Agent::factory()->withUser()->create();
-    $lead = Lead::factory()->for($owner)->create();
-
-    $this->actingAs($owner->user)->get(route('leads.edit', $lead))
-        ->assertSee('No other enabled agent accounts are available.')
-        ->assertDontSee(route('leads.assign', $lead));
 });
 
 test('assignment requests for a missing lead return not found', function () {
