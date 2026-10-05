@@ -50,9 +50,9 @@ class AgentController extends Controller
                 'name' => $data['name'],
                 'email' => $data['login_email'],
                 'password' => $data['password'],
-                'role' => UserRole::AGENT,
                 'is_enabled' => true,
             ]);
+            $user->role = UserRole::AGENT;
             $user->email_verified_at = now();
             $user->save();
 
