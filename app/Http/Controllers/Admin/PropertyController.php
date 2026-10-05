@@ -17,6 +17,8 @@ class PropertyController extends Controller
      */
     public function index(Request $request): View
     {
+        $this->authorize('viewAny', Property::class);
+
         $status = $request->query('status');
         $status = in_array($status, ['pending', 'live', 'sold'], true) ? $status : null;
 
