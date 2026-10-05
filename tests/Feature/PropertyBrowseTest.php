@@ -54,17 +54,6 @@ test('properties can be filtered by area', function () {
         ->assertDontSee('Elsewhere Home');
 });
 
-test('properties can be filtered by status', function () {
-    $status = Category::factory()->create(['group_type' => CategoryGroupType::PROPERTY_STATUS, 'name' => 'For Sale']);
-    activeProperty(['name' => 'For Sale Match'])->categories()->attach($status);
-    activeProperty(['name' => 'No Status Home']);
-
-    $this->get(route('properties.index', ['status' => $status->id]))
-        ->assertOk()
-        ->assertSee('For Sale Match')
-        ->assertDontSee('No Status Home');
-});
-
 test('properties can be filtered by minimum bedrooms', function () {
     activeProperty(['name' => 'Small Home', 'bedrooms' => 2]);
     activeProperty(['name' => 'Big Home', 'bedrooms' => 5]);
@@ -123,7 +112,7 @@ test('the filter selects submit category ids, not labels', function () {
 test('filters accept browser query values without error', function () {
     activeProperty(['name' => 'Some Home', 'bedrooms' => 5]);
 
-    $this->get('/properties?q=&type=&area=&status=&bedrooms=5&price_min=&price_max=&sort=newest')
+    $this->get('/properties?q=&type=&area=&bedrooms=5&price_min=&price_max=&sort=newest')
         ->assertOk()
         ->assertSee('Some Home');
 });

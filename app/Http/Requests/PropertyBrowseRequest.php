@@ -26,7 +26,6 @@ class PropertyBrowseRequest extends FormRequest
             'q' => ['nullable', 'string', 'max:100'],
             'type' => ['nullable', 'integer', 'min:1'],
             'area' => ['nullable', 'integer', 'min:1'],
-            'status' => ['nullable', 'integer', 'min:1'],
             'bedrooms' => ['nullable', 'integer', 'min:0', 'max:20'],
             'price_min' => ['nullable', 'numeric', 'min:0'],
             'price_max' => ['nullable', 'numeric', 'min:0'],

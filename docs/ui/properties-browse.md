@@ -3,7 +3,7 @@
 > Draft to be refined together. Describes the desired UI and behaviour of the public property listing.
 
 ## Purpose
-Public page where a Visitor searches and filters approved listings by type, area, status, price,
+Public page where a Visitor searches and filters approved listings by type, area, price,
 bedrooms and keyword. Rendered in the public shell (`x-public-layout`).
 
 ## Access rules
@@ -16,7 +16,6 @@ bedrooms and keyword. Rendered in the public shell (`x-public-layout`).
 | Keyword | `q` | matches name / address / description |
 | Type | `type` | category id (`property_type`) |
 | Area | `area` | category id (`property_area`) |
-| Status | `status` | category id (`property_status`) |
 | Bedrooms | `bedrooms` | minimum |
 | Price (USD) | `price_min` / `price_max` | range on `price_usd` |
 | Sort | `sort` | `newest` (default) / `price_asc` / `price_desc` |

@@ -27,7 +27,6 @@ class PropertyBrowseController extends Controller
                 ->orWhere('description', 'like', "%{$term}%")))
             ->when($filters['type'] ?? null, fn (Builder $q, $id) => $q->whereHas('categories', fn (Builder $c) => $c->whereKey((int) $id)))
             ->when($filters['area'] ?? null, fn (Builder $q, $id) => $q->whereHas('categories', fn (Builder $c) => $c->whereKey((int) $id)))
-            ->when($filters['status'] ?? null, fn (Builder $q, $id) => $q->whereHas('categories', fn (Builder $c) => $c->whereKey((int) $id)))
             ->when($filters['bedrooms'] ?? null, fn (Builder $q, $bedrooms) => $q->where('bedrooms', '>=', (int) $bedrooms))
             ->when($filters['price_min'] ?? null, fn (Builder $q, $min) => $q->where('price_usd', '>=', $min))
             ->when($filters['price_max'] ?? null, fn (Builder $q, $max) => $q->where('price_usd', '<=', $max));

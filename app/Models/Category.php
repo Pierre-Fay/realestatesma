@@ -45,7 +45,7 @@ class Category extends Model
     /**
      * Options for the public property filter selects, grouped by group type.
      *
-     * @return array{type: Collection<int, self>, area: Collection<int, self>, status: Collection<int, self>}
+     * @return array{type: Collection<int, self>, area: Collection<int, self>}
      */
     public static function filterOptions(): array
     {
@@ -57,7 +57,6 @@ class Category extends Model
         return [
             'type' => $options(CategoryGroupType::PROPERTY_TYPE),
             'area' => $options(CategoryGroupType::PROPERTY_AREA),
-            'status' => $options(CategoryGroupType::PROPERTY_STATUS),
         ];
     }
 }

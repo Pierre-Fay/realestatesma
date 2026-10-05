@@ -56,16 +56,6 @@
         </x-ui.field>
 
         <x-ui.field>
-            <x-ui.field-label for="status">{{ __('Status') }}</x-ui.field-label>
-            <x-ui.select :native="true" id="status" name="status">
-                <option value="">{{ __('Any status') }}</option>
-                @foreach ($categories['status'] as $category)
-                    <option value="{{ $category->id }}" @selected((string) request('status') === (string) $category->id)>{{ $category->name }}</option>
-                @endforeach
-            </x-ui.select>
-        </x-ui.field>
-
-        <x-ui.field>
             <x-ui.field-label for="bedrooms">{{ __('Bedrooms') }}</x-ui.field-label>
             <x-ui.select :native="true" id="bedrooms" name="bedrooms">
                 <option value="">{{ __('Any') }}</option>
