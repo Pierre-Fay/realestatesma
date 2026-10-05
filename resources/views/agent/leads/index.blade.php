@@ -24,7 +24,7 @@
         @if (session('status'))
             <x-ui.alert tone="success">
                 <x-lucide-circle-check />
-                <x-ui.alert-title>{{ session('status') === 'lead-reassigned' ? __('Lead reassigned.') : __('Lead updated.') }}</x-ui.alert-title>
+                <x-ui.alert-title>{{ __('Lead updated.') }}</x-ui.alert-title>
             </x-ui.alert>
         @endif
 

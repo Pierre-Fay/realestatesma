@@ -57,11 +57,11 @@ later), while a property inquiry creates a lead **assigned to the property's age
 `notes`. A property with no assigned agent yields an unassigned lead.
 
 ### Lead assignment
-A lead can exist without an assigned agent (`agent_id` nullable) from the moment it is created. An Admin assigns the
-lead to an Agent, may reassign any lead, and may unassign any lead by clearing `agent_id`. An Agent may reassign
-only a lead currently assigned to their own profile, and must choose another Agent; agents cannot claim unassigned
-leads or unassign leads. Assignment changes preserve the lead's status, contact details, interest, budget and notes.
-The former Agent immediately loses access and the new Agent gains access through their existing lead area.
+A lead can exist without an assigned agent (`agent_id` nullable) from the moment it is created. Only an **Admin**
+assigns a lead to an Agent, reassigns any lead, and unassigns any lead by clearing `agent_id`. Agents do not reassign
+or unassign leads — they only manage the pipeline fields of the leads assigned to them. Assignment changes preserve
+the lead's status, contact details, interest, budget and notes. The former Agent immediately loses access and the new
+Agent gains access through their existing lead area.
 
 ### Eligibility for manual lead assignment
 New manual assignments and reassignments require an Agent linked to an enabled User with the `agent` role.

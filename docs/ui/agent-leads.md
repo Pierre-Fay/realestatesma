@@ -28,24 +28,15 @@ lead's interest, budget and notes. Rendered inside the back office shell (see [`
   - Status options = the current status plus the valid targets; `new` is only offered while the lead is still `new`.
 - Contact details (name, email, phone) are **not** editable here.
 
-## Reassignment — LEAD-04
-- A separate **Reassign lead** card below the edit form lets the current owner transfer the lead
-  (`PATCH /leads/{lead}/assignment`).
-- Native **New agent** select lists other Agent profiles linked to enabled agent-role accounts, including
-  unpublished public profiles. Profiles with disabled logins or no login are not offered.
-- The form explains that the former agent loses access. Status, contact details, interest, budget and notes
-  are preserved; success returns to the lead list with **Lead reassigned.**
-- If no other eligible agent exists, an explanation replaces the form.
-- Invalid selections display a field error. Agents cannot unassign a lead, claim unassigned leads, or reassign
-  another agent's lead; authorization and eligibility are enforced server-side.
-
 ## Rules
 - The agent maintains the pipeline fields (interest, budget, notes, status); a lead cannot move back to `new`.
-- Reassignment = LEAD-04; admin oversight and assignment are available in the separate [admin lead area](admin-leads.md).
+- Assignment, reassignment and unassignment are admin-only actions (LEAD-04), available in the separate
+  [admin lead area](admin-leads.md).
 
 ## Wanted changes
 > Describe the desired UI changes here.
 -
 
 ## Out of scope
-- Admin oversight and initial assignment/unassignment (separate admin area), editing visitor contact details, lead history.
+- Admin oversight, assignment, reassignment and unassignment (separate admin area), editing visitor contact details,
+  lead history.

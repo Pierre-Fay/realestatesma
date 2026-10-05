@@ -66,7 +66,6 @@ Route::middleware(['auth', 'verified', 'agent'])->group(function () {
     Route::get('/leads/{lead}/edit', [LeadController::class, 'edit'])->name('leads.edit');
     Route::put('/leads/{lead}', [LeadController::class, 'update'])->name('leads.update');
     Route::patch('/leads/{lead}/status', [LeadController::class, 'status'])->name('leads.status');
-    Route::patch('/leads/{lead}/assignment', [LeadController::class, 'assign'])->name('leads.assign');
 });
 
 Route::middleware('auth')->group(function () {
