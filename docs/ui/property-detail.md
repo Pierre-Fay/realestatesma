@@ -13,7 +13,7 @@ listing agent — so a Visitor can decide whether to inquire. Rendered in the pu
 ## Content
 - Back link → `/properties`.
 - **Gallery**: a height-constrained stage (`clamp(16rem,45vh,28rem)`) with ‹/› arrows to move through the photos, plus a **non-wrapping** thumbnail filmstrip (horizontal scroll) whose ‹/› arrows appear only when it overflows; clicking a thumbnail swaps the stage (Alpine `active` index). Placeholder when none.
-- **Header**: name, address, badges for type/area/status + labels.
+- **Header**: name, address, badges for type/area + labels.
 - **Facts**: bedrooms, bathrooms, half baths (if > 0), parking (if > 0), lot m², construction m².
 - **Description**.
 - **Features** (amenity categories).
