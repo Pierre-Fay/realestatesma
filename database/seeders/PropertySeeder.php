@@ -28,18 +28,9 @@ class PropertySeeder extends Seeder
     ];
 
     /**
-     * Base RGB colours used to generate the placeholder photos.
-     *
-     * @var list<array{int, int, int}>
+     * Number of photos in the shared gallery pool.
      */
-    private array $palette = [
-        [56, 74, 108],
-        [122, 96, 74],
-        [64, 96, 86],
-        [104, 72, 86],
-        [70, 82, 110],
-        [96, 84, 60],
-    ];
+    private const GALLERY_COUNT = 6;
 
     /**
      * Run the database seeds.
@@ -85,13 +76,14 @@ class PropertySeeder extends Seeder
     }
 
     /**
-     * Generate one featured image plus a small gallery for a demo listing.
+     * Copy a listing's demo photos from the seed assets: one cover photo plus a
+     * rotating selection of three photos from the shared gallery pool.
      */
-    private function seedImages(Property $property, int $seed): void
+    private function seedImages(Property $property, int $index): void
     {
         $base = 'properties/'.$property->slug;
 
-        $this->makePlaceholder($base.'-cover.jpg', $property->name.' (featured)', $seed);
+        $this->copyAsset('cover-'.($index + 1).'.jpg', $base.'-cover.jpg');
         $property->images()->create([
             'path' => $base.'-cover.jpg',
             'type' => PropertyImageType::FEATURED_IMAGE,
@@ -99,7 +91,8 @@ class PropertySeeder extends Seeder
         ]);
 
         for ($n = 1; $n <= 3; $n++) {
-            $this->makePlaceholder($base.'-'.$n.'.jpg', $property->name.' (photo '.$n.')', $seed + $n);
+            $gallery = 'gallery-'.((($index + $n) % self::GALLERY_COUNT) + 1).'.jpg';
+            $this->copyAsset($gallery, $base.'-'.$n.'.jpg');
             $property->images()->create([
                 'path' => $base.'-'.$n.'.jpg',
                 'type' => PropertyImageType::GALLERY,
@@ -109,38 +102,10 @@ class PropertySeeder extends Seeder
     }
 
     /**
-     * Generate a simple gradient placeholder JPEG and store it on the public disk.
+     * Copy a photo from the tracked seed assets into the public storage disk.
      */
-    private function makePlaceholder(string $path, string $label, int $seed): void
+    private function copyAsset(string $asset, string $path): void
     {
-        $width = 1200;
-        $height = 800;
-        $image = imagecreatetruecolor($width, $height);
-
-        [$r, $g, $b] = $this->palette[$seed % count($this->palette)];
-
-        for ($y = 0; $y < $height; $y++) {
-            $t = $y / $height;
-            $color = imagecolorallocate(
-                $image,
-                (int) min(255, $r + (255 - $r) * $t * 0.4),
-                (int) min(255, $g + (255 - $g) * $t * 0.4),
-                (int) min(255, $b + (255 - $b) * $t * 0.4),
-            );
-            imagefilledrectangle($image, 0, $y, $width, $y, $color);
-        }
-
-        $panel = imagecolorallocatealpha($image, 255, 255, 255, 100);
-        imagefilledrectangle($image, 80, 80, $width - 80, $height - 160, $panel);
-
-        $text = imagecolorallocate($image, 255, 255, 255);
-        imagestring($image, 5, 110, 110, $label, $text);
-
-        ob_start();
-        imagejpeg($image, null, 80);
-        $data = (string) ob_get_clean();
-        imagedestroy($image);
-
-        Storage::disk('public')->put($path, $data);
+        Storage::disk('public')->put($path, file_get_contents(database_path('seeders/assets/properties/'.$asset)));
     }
 }
