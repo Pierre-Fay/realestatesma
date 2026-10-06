@@ -26,6 +26,11 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 /.ai/
+/.agents/
 /.claude/
 /.junie/
+/.mcp.json
+/AGENTS.md
 /boost.json
+/docs/
+/opencode.json
