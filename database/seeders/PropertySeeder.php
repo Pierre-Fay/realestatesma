@@ -19,12 +19,12 @@ class PropertySeeder extends Seeder
      * @var list<array<string, mixed>>
      */
     private array $samples = [
-        ['name' => 'Casa del Sol', 'price_usd' => 850000, 'price_mxn' => 14500000, 'bedrooms' => 4, 'bathrooms' => 3, 'half_bathrooms' => 1, 'parking_spaces' => 2, 'lot_meters' => 520, 'construction_meters' => 420],
-        ['name' => 'Villa Mirador', 'price_usd' => 1850000, 'price_mxn' => 31500000, 'bedrooms' => 5, 'bathrooms' => 4, 'half_bathrooms' => 2, 'parking_spaces' => 3, 'lot_meters' => 900, 'construction_meters' => 640],
-        ['name' => 'Condo Centro', 'price_usd' => 430000, 'price_mxn' => 7300000, 'bedrooms' => 2, 'bathrooms' => 2, 'half_bathrooms' => 0, 'parking_spaces' => 1, 'lot_meters' => 0, 'construction_meters' => 120],
-        ['name' => 'Hacienda Guadalupe', 'price_usd' => 2400000, 'price_mxn' => 41000000, 'bedrooms' => 6, 'bathrooms' => 5, 'half_bathrooms' => 2, 'parking_spaces' => 4, 'lot_meters' => 1400, 'construction_meters' => 980],
-        ['name' => 'Casa Atascadero', 'price_usd' => 675000, 'price_mxn' => 11500000, 'bedrooms' => 3, 'bathrooms' => 3, 'half_bathrooms' => 1, 'parking_spaces' => 2, 'lot_meters' => 380, 'construction_meters' => 300],
-        ['name' => 'Loft San Antonio', 'price_usd' => 295000, 'price_mxn' => 5000000, 'bedrooms' => 1, 'bathrooms' => 1, 'half_bathrooms' => 0, 'parking_spaces' => 1, 'lot_meters' => 0, 'construction_meters' => 85],
+        ['name' => 'Casa del Sol', 'price_usd' => 850000, 'price_mxn' => 14500000, 'bedrooms' => 4, 'bathrooms' => 3, 'half_bathrooms' => 1, 'parking_spaces' => 2, 'lot_meters' => 520, 'construction_meters' => 420, 'description' => 'Charming colonial home bathed in natural light, with a private courtyard and a rooftop terrace overlooking the historic center.'],
+        ['name' => 'Villa Mirador', 'price_usd' => 1850000, 'price_mxn' => 31500000, 'bedrooms' => 5, 'bathrooms' => 4, 'half_bathrooms' => 2, 'parking_spaces' => 3, 'lot_meters' => 900, 'construction_meters' => 640, 'description' => 'Panoramic hillside villa with sweeping views of the Parroquia, a resort-style pool, and generous entertaining terraces.'],
+        ['name' => 'Condo Centro', 'price_usd' => 430000, 'price_mxn' => 7300000, 'bedrooms' => 2, 'bathrooms' => 2, 'half_bathrooms' => 0, 'parking_spaces' => 1, 'lot_meters' => 0, 'construction_meters' => 120, 'description' => 'Stylish two-bedroom condominium steps from the Jardín, ideal for city living or a pied-à-terre in the heart of town.'],
+        ['name' => 'Hacienda Guadalupe', 'price_usd' => 2400000, 'price_mxn' => 41000000, 'bedrooms' => 6, 'bathrooms' => 5, 'half_bathrooms' => 2, 'parking_spaces' => 4, 'lot_meters' => 1400, 'construction_meters' => 980, 'description' => 'Grand hacienda with manicured gardens, multiple courtyards, and timeless architectural detail throughout.'],
+        ['name' => 'Casa Atascadero', 'price_usd' => 675000, 'price_mxn' => 11500000, 'bedrooms' => 3, 'bathrooms' => 3, 'half_bathrooms' => 1, 'parking_spaces' => 2, 'lot_meters' => 380, 'construction_meters' => 300, 'description' => 'Warm three-bedroom home in the sought-after Atascadero district, minutes from El Mirador and the botanical garden.'],
+        ['name' => 'Loft San Antonio', 'price_usd' => 295000, 'price_mxn' => 5000000, 'bedrooms' => 1, 'bathrooms' => 1, 'half_bathrooms' => 0, 'parking_spaces' => 1, 'lot_meters' => 0, 'construction_meters' => 85, 'description' => 'Bright, modern loft with clean lines and a private terrace in the vibrant San Antonio neighborhood.'],
     ];
 
     /**
@@ -50,15 +50,16 @@ class PropertySeeder extends Seeder
         foreach ($this->samples as $index => $sample) {
             $property = Property::firstOrCreate(
                 ['slug' => Str::slug($sample['name'])],
-                Property::factory()->raw([
+                [
                     ...$sample,
                     'slug' => Str::slug($sample['name']),
                     'address' => 'San Miguel de Allende',
+                    'zip' => '37700',
                     'is_active' => true,
                     'is_sold' => false,
                     'is_featured' => $index === 0,
                     'show_both_prices' => true,
-                ]),
+                ],
             );
 
             $property->agents()->syncWithoutDetaching([$agent->id]);
