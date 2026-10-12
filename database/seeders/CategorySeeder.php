@@ -29,12 +29,15 @@ class CategorySeeder extends Seeder
     {
         foreach ($this->defaults as $group => $names) {
             foreach ($names as $index => $name) {
-                Category::create([
-                    'name' => $name,
-                    'slug' => Str::slug($name),
-                    'category_order' => $index,
-                    'group_type' => CategoryGroupType::from($group),
-                ]);
+                Category::firstOrCreate(
+                    ['slug' => Str::slug($name)],
+                    [
+                        'name' => $name,
+                        'slug' => Str::slug($name),
+                        'category_order' => $index,
+                        'group_type' => CategoryGroupType::from($group),
+                    ],
+                );
             }
         }
     }

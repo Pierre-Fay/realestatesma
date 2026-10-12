@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -15,9 +16,10 @@ class DatabaseSeeder extends Seeder
         $this->call(CategorySeeder::class);
         $this->call(PropertySeeder::class);
 
-        User::factory()->admin()->create([
-            'name' => 'Admin',
-            'email' => 'admin@example.com',
-        ]);
+        $admin = User::firstOrNew(['email' => 'admin@example.com']);
+        $admin->name = 'Admin';
+        $admin->password = 'password';
+        $admin->role = UserRole::ADMIN;
+        $admin->save();
     }
 }
